@@ -505,7 +505,7 @@ function menuPulldown(vis,pdid){
 }
 
 function generateButton(id,numb){
-		var maxHeight=0;
+	var maxHeight=0;
 	var headerHeight=0;
 	var height;
 	var pad=5;

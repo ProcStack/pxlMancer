@@ -73,7 +73,7 @@ function generateScalers(div,coords,useRefreshWindow,name,outPut){
 	var cursors=["se-resize","s-resize","sw-resize","e-resize","w-resize","ne-resize","n-resize","nw-resize"];
 	var drawLines=[[5,15, 15,15, 15,5], [0,15, 15,15, 7.5,15, 7.5,7.5], [0,5, 0,15, 10,15], [7.5,7.5, 15,7.5, 15,0, 15,15], [0,0, 0,15, 0,7.5, 7.5,7.5], [5,0, 15,0, 15,10],[0,0, 15,0, 7.5,0, 7.5,7.5],[0,10, 0,0, 10,0]];
 	var controls=8;
-	var handleCSS="position:relative;left:0px;top:0px;";
+	var handleCSS="z-index:20000;position:relative;left:0px;top:0px;";
 	handleCSS+="-ms-transform: matrix(1,0,0,1,0,0);";
 	handleCSS+="-webkit-transform: matrix(1,0,0,1,0,0);";
 	handleCSS+="-o-transform: matrix(1,0,0,1,0,0);";
@@ -377,12 +377,14 @@ function grabHandleTrans(transType,grab,mPos,pivot,multArray,marqWindow,init){
 			draw.setTransform(1,0,0,1,0,0);
 			draw.translate(centerX,centerY);
 		draw.transform(mPos[9][0],mPos[9][1],mPos[9][2],mPos[9][3],mPos[9][4],mPos[9][5]);
+		draw.scale(1/mPos[11][0],1/mPos[11][1]);
 			draw.rotate(mPos[6]);
 			draw.translate(-centerX,-centerY);
 			
 			selectDrawCtx.setTransform(1,0,0,1,0,0);
 			selectDrawCtx.translate(centerX,centerY);
 		selectDrawCtx.transform(mPos[9][0],mPos[9][1],mPos[9][2],mPos[9][3],mPos[9][4],mPos[9][5]);
+		selectDrawCtx.scale(1/mPos[11][0],1/mPos[11][1]);
 			selectDrawCtx.rotate(mPos[6]);
 			selectDrawCtx.translate(-centerX,-centerY);
 		}
@@ -391,12 +393,14 @@ function grabHandleTrans(transType,grab,mPos,pivot,multArray,marqWindow,init){
 		draw.setTransform(1,0,0,1,0,0);
 		draw.translate(centerX,centerY);
 	draw.transform(mPos[9][0],mPos[9][1],mPos[9][2]-skew,mPos[9][3],mPos[9][4],mPos[9][5]);
+		draw.scale(1/mPos[11][0],1/mPos[11][1]);
 		draw.rotate(mPos[6]);
 		draw.translate(-centerX,-centerY);
 		
 		selectDrawCtx.setTransform(1,0,0,1,0,0);
 		selectDrawCtx.translate(centerX,centerY);
 	selectDrawCtx.transform(mPos[9][0],mPos[9][1],mPos[9][2]-skew,mPos[9][3],mPos[9][4],mPos[9][5]);
+		selectDrawCtx.scale(1/mPos[11][0],1/mPos[11][1]);
 		selectDrawCtx.rotate(mPos[6]);
 		selectDrawCtx.translate(-centerX,-centerY);
 	}else if(transType == 'e-skew'){
@@ -404,12 +408,14 @@ function grabHandleTrans(transType,grab,mPos,pivot,multArray,marqWindow,init){
 		draw.setTransform(1,0,0,1,0,0);
 		draw.translate(centerX,centerY);
 	draw.transform(mPos[9][0],mPos[9][1]-skew,mPos[9][2],mPos[9][3],mPos[9][4],mPos[9][5]);
+		draw.scale(1/mPos[11][0],1/mPos[11][1]);
 		draw.rotate(mPos[6]);
 		draw.translate(-centerX,-centerY);
 		
 		selectDrawCtx.setTransform(1,0,0,1,0,0);
 		selectDrawCtx.translate(centerX,centerY);
 	selectDrawCtx.transform(mPos[9][0],mPos[9][1]-skew,mPos[9][2],mPos[9][3],mPos[9][4],mPos[9][5]);
+		selectDrawCtx.scale(1/mPos[11][0],1/mPos[11][1]);
 		selectDrawCtx.rotate(mPos[6]);
 		selectDrawCtx.translate(-centerX,-centerY);
 	}else if(transType == 'w-skew'){
@@ -417,12 +423,14 @@ function grabHandleTrans(transType,grab,mPos,pivot,multArray,marqWindow,init){
 		draw.setTransform(1,0,0,1,0,0);
 		draw.translate(centerX,centerY);
 	draw.transform(mPos[9][0],mPos[9][1]+skew,mPos[9][2],mPos[9][3],mPos[9][4],mPos[9][5]);
+		draw.scale(1/mPos[11][0],1/mPos[11][1]);
 		draw.rotate(mPos[6]);
 		draw.translate(-centerX,-centerY);
 		
 		selectDrawCtx.setTransform(1,0,0,1,0,0);
 		selectDrawCtx.translate(centerX,centerY);
 	selectDrawCtx.transform(mPos[9][0],mPos[9][1]+skew,mPos[9][2],mPos[9][3],mPos[9][4],mPos[9][5]);
+		selectDrawCtx.scale(1/mPos[11][0],1/mPos[11][1]);
 		selectDrawCtx.rotate(mPos[6]);
 		selectDrawCtx.translate(-centerX,-centerY);
 	}else if(transType == 's-skew'){
@@ -430,12 +438,14 @@ function grabHandleTrans(transType,grab,mPos,pivot,multArray,marqWindow,init){
 		draw.setTransform(1,0,0,1,0,0);
 		draw.translate(centerX,centerY);
 	draw.transform(mPos[9][0],mPos[9][1],mPos[9][2]+skew,mPos[9][3],mPos[9][4],mPos[9][5]);
+		draw.scale(1/mPos[11][0],1/mPos[11][1]);
 		draw.rotate(mPos[6]);
 		draw.translate(-centerX,-centerY);
 		
 		selectDrawCtx.setTransform(1,0,0,1,0,0);
 		selectDrawCtx.translate(centerX,centerY);
 	selectDrawCtx.transform(mPos[9][0],mPos[9][1],mPos[9][2]+skew,mPos[9][3],mPos[9][4],mPos[9][5]);
+		selectDrawCtx.scale(1/mPos[11][0],1/mPos[11][1]);
 		selectDrawCtx.rotate(mPos[6]);
 		selectDrawCtx.translate(-centerX,-centerY);
 	}else if(transType == 'scale'){

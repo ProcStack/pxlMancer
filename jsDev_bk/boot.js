@@ -140,9 +140,10 @@ function runInitScripts(){ // Run initializing scripts
 									buildDialogues();
 									if(mobile==0){
 										sliderGen(['editLayer_opacity','editBackground_patternQuality','editBackground_shiftColor','editBackground_satch','editBackground_patternBrightness'],['layerSetOpacity()','runDisplayPattern()','runDisplayPattern()','runDisplayPattern()','runDisplayPattern()'],0);
+									}
+									if(mobile==0){
 										setBGPatterns();
 									}
-									prepQualitySettings();
 									bootStep(1,"Pariferals..");
 									setTimeout(function(){
 										initScalers();
@@ -244,22 +245,6 @@ $(document).on('keypress', function(e){
 				}
 				return false;
 			}
-			// Ctrl
-			if(keyHit==17){
-				modKey_ctrl=true;
-			}
-			// Alt
-			if(keyHit==18){
-				modKey_alt=true;
-			}
-			// Shift
-			if(keyHit==16){
-				modKey_shift=true;
-			}
-			// Tab
-			if(keyHit==9){
-				modKey_tab=true;
-			}
 		}
 		// A
 		/*if(keyHit===97){
@@ -309,7 +294,7 @@ $(document).on('keyup', function(e){
 		}
 		//Return
 		if(keyHit===13){
-			if(geoPos.length>2 && geoTool>=1 && typingFocus==0){
+			if(geoPos.length>2 && geoTool>=1){
 				geoDrawCloseGeo(1);
 			}else{
 				if(selectTool>0){
@@ -412,24 +397,6 @@ $(document).on('keyup', function(e){
 			reinitializeSettings(1);
 			return false;
 		}
-		
-		// Ctrl
-		if(keyHit==17){
-			modKey_ctrl=false;
-		}
-		// Alt
-		if(keyHit==18){
-			modKey_alt=false;
-		}
-		// Shift
-		if(keyHit==16){
-			modKey_shift=false;
-		}
-		// Tab
-		if(keyHit==9){
-			modKey_tab=false;
-		}
-		
 	}else{
 		if(dialogueOpen==1 && openDialogue!='contactMe' && active==1){
 			// Release Enter - Confirm window dialog
@@ -486,7 +453,7 @@ function checkMouse(e,dClick){
 	if(printKey==1){
 		$("#alertFeed2").html(button);
 	}
-	if(button == 1 && !modKey_ctrl){
+	if(button == 1){
 		dragClick=dClick;
 		
 		//if(geoTool==1 && geoToolStopDraw==2){
@@ -497,7 +464,7 @@ function checkMouse(e,dClick){
 			geoToolStopDraw=1;
 		}*/
 	}
-	if(button == 2 || (button == 1 && modKey_ctrl) ){
+	if(button == 2){
 		if(geoTool>=1){
 			geoToolStopDraw=3;
 		}
@@ -548,41 +515,31 @@ function checkMouse(e,dClick){
 	return false;
 }
 
-function setInputFocusActions(curObj=null){ // To stop hotkeys while entering text
-	var setTextArea=true;
-	if(curObj==null){
-		curObj="input";
-	}else{
-		curObj="#"+curObj;
-		setTextArea=false;
-	}
-	
-	$(curObj).focusin(function(){
+function setInputFocusActions(){ // To stop hotkeys while entering text
+	$("input").focusin(function(){
 		typingFocus=1;
 	});
-	$(curObj).focus(function(){ // Some Chrome doesn't work with focusin, even though they say only firefox has an issue
+	$("input").focus(function(){ // Some Chrome doesn't work with focusin, even thought they say only firefox has an issue
 		typingFocus=1;
 	});
-	$(curObj).focusout(function(){
+	$("input").focusout(function(){
 		typingFocus=0;
 	});
-	$(curObj).blur(function(){ // Same with focusout
+	$("input").blur(function(){ // Same with focusout
 		typingFocus=0;
 	});
-	if(setTextArea){
-		$("textarea").focusin(function(){
-			typingFocus=1;
-		});
-		$("textarea").focus(function(){
-			typingFocus=1;
-		});
-		$("textarea").focusout(function(){
-			typingFocus=0;
-		});
-		$("textarea").blur(function(){
-			typingFocus=0;
-		});
-	}
+	$("textarea").focusin(function(){
+		typingFocus=1;
+	});
+	$("textarea").focus(function(){
+		typingFocus=1;
+	});
+	$("textarea").focusout(function(){
+		typingFocus=0;
+	});
+	$("textarea").blur(function(){
+		typingFocus=0;
+	});
 }
 
 function updateThemeColor(themeColor){
@@ -827,12 +784,4 @@ function runNewDocumentPrompt(checkPrompt,run,rand,drawPosPrompt,messPosPrompt){
 		menuVis(1,1);
 	}
 }
-
-function prepQualitySettings(){
-
-	// sl_qualityPercent
-	document.getElementById('sl_qualityPercent_val').value=machineBenchmark;
-	//document.getElementById('sl_qualityPercent_val').parentNode.submit();
-}
-
 

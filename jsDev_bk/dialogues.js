@@ -617,7 +617,7 @@ function tempWindow(msg,pos,clickFunction,timeDisp,timeFade,gen,hideMenu){
 	timeDisp=timeDisp-.10;
 	if(timeDisp<=0){
 		$('#'+msg).remove();
-		if(hideMenu<2 && hideMenu>-1){
+		if(hideMenu<2){
 			if(msg == "tempWindow_"+tempWindowId){
 				tempWindowDisplay(0);
 				if(openDialogue==''){

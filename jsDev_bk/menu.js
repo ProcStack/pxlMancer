@@ -94,15 +94,7 @@ function gradientInit(patternGen,boot){
 	gBG.setAttribute("height", 1);
 	gBG.setAttribute("width", sW);
 	gBG.setAttribute("height", sH);
-	
-	var pre=new Date().getTime();
 	gradientRunner("gradientBG",patternGen,gradFromHex,gradToHex,((mobile+1)%2),1,boot);
-	var post=new Date().getTime();
-	var delta=post-pre;
-	machineBenchmark=Math.max(0, delta-500);
-	machineBenchmark=1-(machineBenchmark*.0005);
-	console.log("Benchmark Time -- "+delta);
-	console.log("Machine Base Quality -- "+machineBenchmark);
 }
 function tempBgInit(){
 	gBG=document.getElementById("tempBG");
@@ -357,9 +349,9 @@ function sliderShape(div,canvas,alpha,arrowHeight,pxRatio){ //Button shapes
 			B=(Math.sin( (((ii/4)%width)/width) *3+536+ii) + Math.cos( (((ii/4)%width)/width) *4+66)/2 + Math.cos( (((ii/4)%width)/width) *12+757+ii)/2  )/4+.75;
 		
 			A=(R+B+G)/2;
-			pix[i]=pix[i]*R*1.25;
+			pix[i]=pix[i]*R*1.1;
 			pix[i+1]=pix[i+1]*G*1.3;
-			pix[i+2]=pix[i+2]*B*1.25;
+			pix[i+2]=pix[i+2]*B*1.1;
 			pix[i+3]=Math.min(255, pix[i+3]*A);
 		}else if(pxRatio==2){
 			ii=i*3+12+Math.sin(i/2.713)*5 - Math.floor(i/width)*2;
@@ -368,18 +360,18 @@ function sliderShape(div,canvas,alpha,arrowHeight,pxRatio){ //Button shapes
 			B=(Math.sin( (((ii/4)%width)/width) *6+536+ii) + Math.sin( (((ii/4)%width)/width) *5+66)/2 + Math.cos( (((ii/4)%width)/width) *7+757+ii)/2  )/4+.75;
 		
 			A=(R+B+G)/2;
-			pix[i]=(pix[i]*4+pix[i]*R*1.1)/3;
-			pix[i+1]=(pix[i+1]*4+pix[i+1]*G*1.3)/3;
-			pix[i+2]=(pix[i+2]*4+pix[i+2]*B*1.1)/3;
-			pix[i+3]=(pix[i+3]*2+Math.min(255, pix[i+3]*A))/2;
+			pix[i]=(pix[i]*4+pix[i]*R*1.1)/5;
+			pix[i+1]=(pix[i+1]*4+pix[i+1]*G*1.3)/5;
+			pix[i+2]=(pix[i+2]*4+pix[i+2]*B*1.1)/5;
+			pix[i+3]=(pix[i+3]*2+Math.min(255, pix[i+3]*A))/3;
 		}
 	}
 	draw.putImageData(noise, 0, 0);
 
 
-	R=130;
-	G=180;
-	B=180;
+	R=100;
+	G=130;
+	B=150;
 	hex=rgbToHex(Math.floor(R),Math.floor(G),Math.floor(B) );
 	var strokeColor=hex;
 	draw.globalAlpha=alpha;
@@ -406,8 +398,8 @@ function layerSlidebarShape(div,canvas,alpha,arrowHeight){ //Button shapes
 	var controls=document.getElementById(canvas);
 	var draw=controls.getContext('2d');
 
-	R=80;
-	G=100;
+	R=50;
+	G=80;
 	B=100;
 	var hex=rgbToHex(Math.floor(R),Math.floor(G),Math.floor(B) );
 	var fillColor=hex;
@@ -434,17 +426,17 @@ function layerSlidebarShape(div,canvas,alpha,arrowHeight){ //Button shapes
 		G=(Math.sin( (((ii/4)%width)/width) *3+744+ii) + Math.cos( (((ii/4)%width)/width) *5+66+ii)/2 + Math.cos( (((ii/4)%width)/width) *6+4626)/2  )/4+.75;
 		B=(Math.sin( (((ii/4)%width)/width) *3+536+ii) + Math.cos( (((ii/4)%width)/width) *4+66)/2 + Math.cos( (((ii/4)%width)/width) *12+757+ii)/2  )/4+.75;
 		A=(R+B+G)/2;
-		pix[i]=pix[i]*R*1.25;
+		pix[i]=pix[i]*R*1.1;
 		pix[i+1]=pix[i+1]*G*1.3;
-		pix[i+2]=pix[i+2]*B*1.25;
+		pix[i+2]=pix[i+2]*B*1.1;
 		pix[i+3]=pix[i+3]*A;
 	}
 	draw.putImageData(noise, 0, 0);
 
 
-	R=130;
-	G=180;
-	B=180;
+	R=100;
+	G=130;
+	B=150;
 	hex=rgbToHex(Math.floor(R),Math.floor(G),Math.floor(B) );
 	var strokeColor=hex;
 	draw.globalAlpha=alpha;
@@ -475,39 +467,39 @@ function bevelShape(div,button,padding,canvas,alpha,bevel,buffer,pad,topLB,topRB
 	controls=document.getElementById(canvas);
 	draw=controls.getContext('2d');
 
-	R=120;
-	G=150;
-	B=150;
+	R=70;
+	G=90;
+	B=100;
 	hex=rgbToHex(Math.floor(R),Math.floor(G),Math.floor(B) );
 	strokeColor=hex;
 	clearScreen(canvas);	
 	if( toggled == 0 ){
 		if(selected==0){
-			R=80;
-			G=100;
-			B=100;
+			R=50;
+			G=70;
+			B=80;
 		}else if(selected==1){
-			R=120;
-			G=180;
-			B=180;
+			R=90;
+			G=110;
+			B=120;
 		}else if(selected==2){
-			R=100;
-			G=150;
-			B=150;
+			R=50;
+			G=40;
+			B=50;
 		}
 	}else{
 		if(selected==0){
-			R=170;
-			G=200;
-			B=200;
+			R=140;
+			G=170;
+			B=170;
 		}else if(selected==1){
-			R=150;
-			G=240;
-			B=240;
+			R=130;
+			G=220;
+			B=220;
 		}else if(selected==2){
-			R=110;
-			G=180;
-			B=180;
+			R=30;
+			G=80;
+			B=80;
 		}
 	}
 	hex=rgbToHex(Math.floor(R),Math.floor(G),Math.floor(B) );
@@ -528,8 +520,7 @@ function bevelShape(div,button,padding,canvas,alpha,bevel,buffer,pad,topLB,topRB
 		}else{
 			draw.lineTo(pad,bevel+buffer);
 			draw.lineTo(pad,bevel);
-			draw.quadraticCurveTo(pad,pad,bevel,pad);
-			//draw.lineTo(bevel,pad);
+			draw.lineTo(bevel,pad);
 			draw.lineTo(bevel+buffer,pad);
 		}
 		if(topRB%2==0){
@@ -537,8 +528,7 @@ function bevelShape(div,button,padding,canvas,alpha,bevel,buffer,pad,topLB,topRB
 		}else{
 			draw.lineTo(width-bevel-buffer,pad);
 			draw.lineTo(width-bevel,pad);
-			draw.quadraticCurveTo(width-pad,pad,width-pad, bevel);
-			//draw.lineTo(width-pad,bevel);
+			draw.lineTo(width-pad,bevel);
 			draw.lineTo(width-pad,bevel+buffer);
 		}
 		if(lowRB%2==0){
@@ -546,8 +536,7 @@ function bevelShape(div,button,padding,canvas,alpha,bevel,buffer,pad,topLB,topRB
 		}else{
 			draw.lineTo(width-pad,height-bevel-buffer);
 			draw.lineTo(width-pad,height-bevel);
-			draw.quadraticCurveTo(width-pad,height-pad,width-bevel,height-pad);
-			//draw.lineTo(width-bevel,height-pad);
+			draw.lineTo(width-bevel,height-pad);
 			draw.lineTo(width-bevel-buffer,height-pad);
 			draw.lineTo(bevel+buffer,height-pad);
 		}
@@ -555,8 +544,7 @@ function bevelShape(div,button,padding,canvas,alpha,bevel,buffer,pad,topLB,topRB
 			draw.lineTo(pad,height-pad);
 		}else{
 			draw.lineTo(bevel+buffer,height-pad);
-			draw.quadraticCurveTo(pad,height-pad,pad,height-bevel);
-			//draw.lineTo(pad,height-bevel);
+			draw.lineTo(pad,height-bevel);
 			draw.lineTo(pad,height-bevel);
 			draw.lineTo(pad,height-bevel-buffer);
 		}
@@ -608,58 +596,38 @@ function bevelShape(div,button,padding,canvas,alpha,bevel,buffer,pad,topLB,topRB
 		if(topLB==1){
 			draw.lineTo(pad,bevel+buffer);
 			draw.lineTo(pad,bevel);
-			draw.quadraticCurveTo(pad,pad,bevel,pad);
-			//draw.lineTo(bevel,pad);
+			draw.lineTo(bevel,pad);
 			draw.lineTo(bevel+buffer,pad);
 			draw.lineTo(width-bevel-buffer,pad);
 		}else if(topLB==0){
 			draw.lineTo(pad,pad);
-			if(topRB==0){
-				draw.lineTo(width-bevel-buffer,pad);
-			}else{
-				draw.moveTo(width-bevel-buffer,pad);
-			}
+			draw.lineTo(width-bevel-buffer,pad);
 		}
 		if(topRB==1){
 			draw.lineTo(width-bevel-buffer,pad);
 			draw.lineTo(width-bevel,pad);
-			draw.quadraticCurveTo(width-pad,pad,width-pad,bevel);
-			//draw.lineTo(width-pad,bevel);
+			draw.lineTo(width-pad,bevel);
 			draw.lineTo(width-pad,bevel+buffer);
 		}else if(topRB==0){
 			draw.lineTo(width-pad,pad);
 			draw.lineTo(width-pad,bevel+buffer);
-			if(lowRB==0){
-				draw.lineTo(width-pad,height-bevel-buffer);
-			}else{
-				draw.moveTo(width-pad,height-bevel-buffer);
-			}
 		}
 		if(lowRB==1){
 			draw.lineTo(width-pad,height-bevel-buffer);
 			draw.lineTo(width-pad,height-bevel);
-			draw.quadraticCurveTo(width-pad,height-pad,width-bevel,height-pad);
-			//draw.lineTo(width-bevel,height-pad);
+			draw.lineTo(width-bevel,height-pad);
 			draw.lineTo(width-bevel-buffer,height-pad);
 		}else if(lowRB==0){
 			draw.lineTo(width-pad,height-pad);
-			//draw.moveTo(width-pad,height-pad);
-			if(lowLB==0){
-				draw.lineTo(bevel+buffer,height-pad);
-			}else{
-				draw.moveTo(bevel+buffer,height-pad);
-			}
 		}
 		if(lowLB==1){
 			draw.lineTo(bevel+buffer,height-pad);
 			draw.lineTo(bevel,height-pad);
-			draw.quadraticCurveTo(pad,height-pad,pad,height-bevel);
-			//draw.lineTo(pad,height-bevel);
+			draw.lineTo(pad,height-bevel);
 			draw.lineTo(pad,height-bevel-buffer);
 		}else if(lowLB==0){
 			draw.lineTo(pad,height-pad);
 		}
-		draw.closePath();
 		draw.lineJoin = 'round';
 		draw.stroke();
 	}else if(button == 2){ // Sub Headers

@@ -384,7 +384,6 @@ function doGeoDraw(canvas, setPos){
 							loc=[zoomMouseX,zoomMouseY];
 							geoDrawEditVertex(1,'',[-1]);
 							geoDrawCheck(2);
-							//geoPosSegments[geoToolSegment]=1;
 						//}else if(loc.length==2){
 						//	loc.unshift(loc[0],loc[1]);
 						}else{
@@ -392,7 +391,6 @@ function doGeoDraw(canvas, setPos){
 								geoPos.push(zoomMouseX);
 								geoPos.push(zoomMouseY);
 								geoDrawEditVertex(1,'',[-1]);
-								//geoPosSegments[geoToolSegment]+=1;
 							}
 						}
 					}
@@ -409,7 +407,6 @@ function doGeoDraw(canvas, setPos){
 									geoPos.push(zoomMouseX);
 									geoPos.push(zoomMouseY);
 									geoDrawEditVertex(1,'',[-1]);
-									//geoPosSegments[geoToolSegment]=1;
 								}
 							}
 						}
@@ -420,21 +417,17 @@ function doGeoDraw(canvas, setPos){
 									geoPos.push((geoPos[geoPos.length-2]*2+zoomMouseX)/3);
 									geoPos.push((geoPos[geoPos.length-2]*2+zoomMouseY)/3);
 									geoDrawEditVertex(1,'',[-1]);
-									//geoPosSegments[geoToolSegment]+=1;
 									geoPos.push((geoPos[geoPos.length-2]+zoomMouseX*2)/3);
 									geoPos.push((geoPos[geoPos.length-2]+zoomMouseY*2)/3);
 									geoDrawEditVertex(1,'',[-1]);
-									//geoPosSegments[geoToolSegment]+=1;
 								}else{
 									geoPos.push((geoPos[geoPos.length-2]+zoomMouseX)/2);
 									geoPos.push((geoPos[geoPos.length-2]+zoomMouseY)/2);
 									geoDrawEditVertex(1,'',[-1]);
-									//geoPosSegments[geoToolSegment]+=1;
 								}
 								geoPos.push(zoomMouseX);
 								geoPos.push(zoomMouseY);
 								geoDrawEditVertex(1,'',[-1]);
-								//geoPosSegments[geoToolSegment]+=1;
 							}
 						}
 						loc=geoPos;
@@ -453,10 +446,8 @@ function doGeoDraw(canvas, setPos){
 			loc=geoPos;
 			loc.push( ((loc[x]+zoomMouseX)/2) );
 			loc.push( ((loc[x+1]+zoomMouseY)/2) );
-			//geoPosSegments[geoToolSegment]+=1;
 			loc.push(zoomMouseX);
 			loc.push(zoomMouseY);
-			//geoPosSegments[geoToolSegment]+=1;
 		}
 			
 		if(loc.length >=3){
@@ -467,19 +458,19 @@ function doGeoDraw(canvas, setPos){
 				temp.push(loc[x+1]);
 			}
 			loc=temp;
-			x=loc.length-2; // Huh?
-			if(geoTool<2){
-				if(geoToolStopDraw<2){
-					loc.push( ((loc[x]+zoomMouseX)/2) );
-					loc.push( ((loc[x+1]+zoomMouseY)/2) );
+				x=loc.length-2;
+				if(geoTool<2){
+					if(geoToolStopDraw<2){
+						loc.push( ((loc[x]+zoomMouseX)/2) );
+						loc.push( ((loc[x+1]+zoomMouseY)/2) );
+						loc.push(zoomMouseX);
+						loc.push(zoomMouseY);
+					}
+					loc.push(zoomMouseX);
+					loc.push(zoomMouseY);
 					loc.push(zoomMouseX);
 					loc.push(zoomMouseY);
 				}
-				loc.push(zoomMouseX);
-				loc.push(zoomMouseY);
-				loc.push(zoomMouseX); // Welp, this is that end shape
-				loc.push(zoomMouseY); //   point stacking ....
-			}
 			var maxCount=parseInt($('#geoDrawGuides').attr("curDisplay"));
 			var verts=$('#geoDrawGuides').find('.vert');
 			if((loc.length/2)>maxCount && maxCount!=-1){
@@ -489,24 +480,14 @@ function doGeoDraw(canvas, setPos){
 					$(verts[x]).remove();
 				}
 			}
-			
-			//geoPosSegments[geoToolSegment]=parseInt(loc.length*.5); // Should always be an int, but who knows....
-			
 			clearScreen(canvas);
-			
 			var fill=geoDrawFillType==1?-1:$("#sl"+diaVal+"_setWidth_val").val();
-			var curIndex=0;
-			var tmpLoc=[];
-			for(var x=0; x<geoPosSegments.length; ++x){
-				tmpLoc=loc.slice(curIndex, x==geoPosSegments.length-1?loc.length:curIndex+geoPosSegments[x]*2);
-				curIndex+=geoPosSegments[x]*2;
-				drawGeo(tmpLoc,(3+geoDrawLineType),geoDrawClosedType,[R,G,B],A,fill,mirror,canvas);
-				if(geoTool!=2){ // Draw outline mid edits
-					if( (geoToolStopDraw==0 || geoToolStopDraw==3) && x==geoToolSegment){
-						drawGeo(tmpLoc,(3+geoDrawLineType),geoDrawClosedType,[180,180,180],1,0,-1,canvas);
-					}else{
-						drawGeo(tmpLoc,(3+geoDrawLineType),geoDrawClosedType,[120,160,240],.6,0,-1,canvas);
-					}
+			drawGeo(loc,(3+geoDrawLineType),geoDrawClosedType,[R,G,B],A,fill,mirror,canvas);
+			if(geoTool!=2){ // Draw outline mid edits
+				if(geoToolStopDraw==0 || geoToolStopDraw==3){
+					drawGeo(loc,(3+geoDrawLineType),geoDrawClosedType,[180,180,180],1,0,-1,canvas);
+				}else{
+					drawGeo(loc,(3+geoDrawLineType),geoDrawClosedType,[120,160,240],.6,0,-1,canvas);
 				}
 			}
 		}
@@ -516,8 +497,6 @@ function geoDrawCheck(tgl){
 	if(tgl==1){
 		geoTool=1;
 		geoPos=[];
-		geoPosSegments=[0];
-		//geoPosSegments[geoToolSegment]=0;
 		//$("#geoDrawGuides").css({"zIndex":12000});
 	}else if(tgl==2){
 		$("#geoDrawGuidesParent").css({"zIndex":1030,'visibility':'visible'});
@@ -525,8 +504,6 @@ function geoDrawCheck(tgl){
 	}else if(tgl==3){
 		geoTool=1;
 		geoPos=[];
-		geoPosSegments=[0];
-		//geoPosSegments[geoToolSegment]=0;
 		$("#geoDrawGuidesParent").css({"zIndex":-510,'visibility':'hidden'});
 		$("#geoDrawGuides").css({"zIndex":-510,'visibility':'hidden'});
 	}else if(tgl==4){
@@ -545,11 +522,9 @@ function geoDrawMouseUp(){
 		var geoDC=parseInt($("#mouseDraw").attr('geoDoubleClick'));
 		if(geoDC==0){
 			if(geoTool==1){
-				geoPosUndo=[...geoPos];
-				geoPosSegmentsUndo=[...geoPosSegments];
+				geoPosUndo=geoPos;
 				//menuVis(0,1);
 				doGeoDraw("curDraw",1);
-				geoPosSegments[geoToolSegment]+=1;
 				var math=Math.sqrt(Math.pow( (geoPos[geoPos.length-4]-geoPos[geoPos.length-2]) ,2),Math.pow( (geoPos[geoPos.length-3]-geoPos[geoPos.length-1]) ,2));
 				if(math<5){
 					$("#mouseDraw").attr('geoDoubleClick',1);
@@ -563,8 +538,7 @@ function geoDrawMouseUp(){
 		}else{
 			//menuVis(0,1);
 			if(geoTool==1){
-				geoPosUndo=[...geoPos];
-				geoPosSegmentsUndo=[...geoPosSegments];
+				geoPosUndo=geoPos;
 				geoTool=3;
 				doGeoDraw("curDraw",1);
 				geoTool=2;
@@ -575,7 +549,6 @@ function geoDrawMouseUp(){
 				updateLayerCanvas(curLayer);
 				geoDrawUpdateRefreshWindow();
 				geoPos=[];
-				geoPosSegments=[0];
 				geoDrawCheck(3);
 				$("#mouseDraw").attr('geoDoubleClick',0);
 				//doGeoDraw("curDraw",2);
@@ -599,8 +572,7 @@ function geoDrawCloseGeo(check){
 	if(typingFocus==0){
 		typingFocus=1;
 		if(geoTool==1){
-			geoPosUndo=[...geoPos];
-			geoPosSegmentsUndo=[...geoPosSegments];
+			geoPosUndo=geoPos;
 			doGeoDraw("curDraw",1);
 			geoToolStopDraw=0;
 			if(geoDrawLineType==1){
@@ -645,9 +617,7 @@ function geoDrawCloseGeo(check){
 			updateLayerCanvas(curLayer);
 			geoDrawUpdateRefreshWindow();
 			geoPos=[];
-			geoPosUndo=[...geoPos];
-			geoPosSegments=[0];
-			geoPosSegmentsUndo=[...geoPosSegments];
+			geoPosUndo=geoPos;
 			$("#mouseDraw").attr('geoDoubleClick',0);
 			//doGeoDraw("curDraw",2);
 			$("#geoDrawGuides").html('');// Clear current control points for dev reasons
@@ -680,16 +650,13 @@ function geoDrawCloseGeo(check){
 }
 function geoDrawClose(){ // Exit out of geo draw context
 	geoPos=[];
-	geoPosSegments=[0];
 	geoTool=2;
 	geoToolStopDraw=0;
 	$("#mouseDraw").attr('geoDoubleClick',0);
 	$("#geoDrawGuides").html('');// Clear current control points for dev reasons
 	$('#geoDrawGuides').attr("curDisplay",'-1');
 	clearScreen("curDraw");
-	var curSegVerts=$("#geoDrawGuides").find('.vert').length;
-	$('#geoDraw_val').val(curSegVerts);
-	geoPosSegments[geoToolSegment]=curSegVerts;
+	$('#geoDraw_val').val($("#geoDrawGuides").find('.vert').length);
 
 	geoDrawCheck(3);
 	setTimeout(function(){
@@ -700,7 +667,6 @@ function geoDrawClose(){ // Exit out of geo draw context
 function geoDrawDelPoint(){
 	$("#geoDrawSpline_"+(geoPos.length/2)).remove();
 	geoPos.splice(geoPos.length-2,2);
-	geoPosSegments[geoToolSegment]-=1;
 	/*if(geoDrawRanDel==0){
 		geoDrawRanDel=1;
 		geoPos.splice(geoPos.length-2,2);
@@ -712,8 +678,6 @@ function geoDrawDelPoint(){
 		doGeoDraw('curDraw', 0);
 	}else{
 		geoPos=[];
-		geoPosSegments=[0];
-//		geoPosSegments[geoToolSegment]=0;
 		geoTool=2;
 		geoToolStopDraw=0;
 		clearScreen("curDraw");
@@ -728,77 +692,42 @@ function geoDrawDelPoint(){
 function geoDrawSplitPoint(sel){
 	if(geoPos.length>0){
 		var hitPoint=parseInt($("#"+sel).attr('modPoint'))-1;
-		geoToolSegment=parseInt($("#"+sel).attr("segment"));
 		$("#geoDrawGuides").find('.vert').remove();
-		var tmpRead=[...geoPos];
-		if(geoPosSegments.length == 0){
-			geoPosSegments.push(geoPos.length*.5);
-		}else if(geoPosSegments[0]==0){
-			geoPosSegments[0]=geoPos.length*.5;
-		}
-		var tmpSegments=[...geoPosSegments];
+		var tmpRead=geoPos;
 		var tmpGeoPos=[];
 		geoPos=[];
-		var curSegment=0;
-		var curSegmentFloor=0;
-		var curSegmentCap=geoPosSegments[0];
 		for(var x=0; x<tmpRead.length; x+=2){
-			var curPoint=x*.5;
-			if(curPoint==curSegmentCap){
-				curSegment+=1;
-				curSegmentFloor=curSegmentCap;
-				curSegmentCap+=tmpSegments[curSegment];
-			}
-			
-			if(curPoint == hitPoint){
-				var from=x-2<curSegmentFloor*2?curSegmentCap*2-2:x-2
-				var to=x+2>=curSegmentCap*2?curSegmentFloor*2:x+2
+			if(x/2 == hitPoint){
+				var from=x-2<0?tmpRead.length-2:x-2
+				var to=x+2>=tmpRead.length?0:x+2
 				geoPos.push((tmpRead[from]+tmpRead[x])/2);
 				geoPos.push((tmpRead[from+1]+tmpRead[x+1])/2);
-				geoDrawEditVertex(1, 0, -1,curSegment);
+				geoDrawEditVertex(1, 0, -1);
 				geoPos.push(tmpRead[x]);
 				geoPos.push(tmpRead[x+1]);
-				geoDrawEditVertex(1, 0, -1,curSegment);
+				geoDrawEditVertex(1, 0, -1);
 				geoPos.push((tmpRead[to]+tmpRead[x])/2);
 				geoPos.push((tmpRead[to+1]+tmpRead[x+1])/2);
-				geoDrawEditVertex(1, 0, -1,curSegment);
-				//geoPosSegments[curSegmentCap]+=2;
+				geoDrawEditVertex(1, 0, -1);
 			}else{
 				geoPos.push(tmpRead[x]);
 				geoPos.push(tmpRead[x+1]);
-				geoDrawEditVertex(1, 0, -1,curSegment);
 			}
+			geoDrawEditVertex(1, 0, -1);
 		}
 		$('#geoDrawGuides').attr('curDisplay', geoPos.length-1);
-		
-		
-		var vertObjs=$("#geoDrawGuides").find('.vert');
-		var vertTotal=vertObjs.length;
-		$('#geoDraw_val').val(vertTotal);
-		geoPosSegments=[];
-		for(var x=0; x<vertTotal; ++x){
-			var curSeg=parseInt($(vertObjs[x]).attr("segment"));
-			if(typeof(geoPosSegments[curSeg])=="undefined"){
-				geoPosSegments[curSeg]=0;
-			}
-			geoPosSegments[curSeg]+=1;
-		}
-		drawGeoUpdatePosList();
-		
 		doGeoDraw("curDraw",0);
-
 	}
 }
-function geoDrawEditVertex(gen, sel, pos, seg=geoToolSegment){
+function geoDrawEditVertex(gen, sel, pos){
 	if(gen==1){
 		var size=6;
 		var name="geoDrawSpline_"+(geoPos.length/2);
-		var html="<canvas class='vert' id='"+name+"' modPoint='"+(geoPos.length/2)+"' segment='"+seg+"' mX='' mY='' origX='' origY='' height='"+size+"px' onMouseDown=\"geoToolStopDraw=1;geoDrawEditVertex(0, '"+name+"',[-1]);\" onMouseUp='geoToolStopDraw=3;' width='"+size+"px' style='z-index:"+(2000+(geoPos.length/2))+";position:absolute;top:0;left:0;cursor:pointer;'></canvas>"
+		var html="<canvas class='vert' id='"+name+"' modPoint='"+(geoPos.length/2)+"' mX='' mY='' origX='' origY='' height='"+size+"px' onMouseDown=\"geoToolStopDraw=1;geoDrawEditVertex(0, '"+name+"',[-1]);\" onMouseUp='geoToolStopDraw=3;' width='"+size+"px' style='z-index:"+(2000+(geoPos.length/2))+";position:absolute;top:0;left:0;cursor:pointer;'></canvas>"
 		$("#geoDrawGuides").append(html);
 		$("#"+name).css({ "left":geoPos[geoPos.length-2]-size/2,"top":geoPos[geoPos.length-1]-size/2 });
 		$("#"+name).attr({ "mX":geoPos[geoPos.length-2]-size/2,"mY":geoPos[geoPos.length-1]-size/2, "origX":geoPos[geoPos.length-2]-size/2,"origY":geoPos[geoPos.length-1]-size/2 });
-		$("#"+name).attr('onclick',  "if(geoTool>=2){cmdDoubleClick('"+name+"',20,\"geoDrawSplitPoint('"+name+"');\",0);}");
-		
+		$("#"+name).attr('onclick',  "if(geoTool>=2){cmdDoubleClick('"+name+"',15,\"geoDrawSplitPoint('"+name+"');\",0);}");
 		
 		$('#geoDraw_val').val($("#geoDrawGuides").find('.vert').length);
 		
@@ -810,22 +739,8 @@ function geoDrawEditVertex(gen, sel, pos, seg=geoToolSegment){
 			geoDrawCheck(2);
 		}
 		drawGeo([3,3],1,6,[180,180,200],150,-1,-1,name);
-		
-		var vertObjs=$("#geoDrawGuides").find('.vert');
-		var vertTotal=vertObjs.length;
-		geoPosSegments=[];
-		for(var x=0; x<vertTotal; ++x){
-			var curSeg=parseInt($(vertObjs[x]).attr("segment"));
-			if(typeof(geoPosSegments[curSeg])=="undefined"){
-				geoPosSegments[curSeg]=0;
-			}
-			geoPosSegments[curSeg]+=1;
-		}
-		
-		drawGeoUpdatePosList();
 	}else{
 		var modPoint=parseInt($("#"+sel).attr("modPoint"))-1;
-		geoToolSegment=parseInt($("#"+sel).attr("segment"));
 		var fromM,toM,offset;
 		//if(pos[0]!=-1){
 			if(geoToolStopDraw==1){
@@ -853,9 +768,6 @@ function geoDrawEditVertex(gen, sel, pos, seg=geoToolSegment){
 			$("#"+sel).attr('doubleClick',0);
 		}
 		doGeoDraw("curDraw",0);
-		
-		drawGeoUpdatePosList();
-		
 		if(geoToolStopDraw==2){
 			setTimeout(function(){geoDrawEditVertex(0,sel,pos);},30);
 		}else{
@@ -873,39 +785,37 @@ function drawGeoPrompt(val){
 		var addPad=5;
 		var addPadButton=10;
 		button="geoDrawGuidesParent";
-		divHeight=58+addPad;
+		divHeight=28+addPad;
 		divWidth=1052+addPad+addPadButton;
 		
-		var curLine=geoDrawLineType==1?'Curved':'Straight';
+		var curLine=geoDrawLineType==1?'[ Curved ]':'[ Line ]';
 		
-		var html="<div id='geoDrawPrompt' style='position:relative;top:-2;left:-3;'; onMouseOver='geoToolStopDraw=1;' onMouseOut='geoToolStopDraw=0;'>";
-		html+="<table style='border:0px;width:900px;height:25px;'><tr valign='middle'>";
-		html+="<td align='center' style='overflow:hidden;height:20px;width:30px;padding-left:5px;'><form id='geoDraw_form'><input type='text' value='0' id='geoDraw_val' style='position:relative;bottom:7px;width:30px;background-color:#155555;color:#cccccc;border:none;text-align:right;' readonly></form></div></td>";
+		var html="<div id='geoDrawPrompt' style='position:relative;top:-2;left:-3;'; onMouseOver='geoToolStopDraw=1;' onMouseOut='geoToolStopDraw=0;'><table style='border:0px;width:900px;height:25px;'><tr valign='middle'>";
+		html+="<td align='center' style='overflow:hidden;height:20px;width:30px;padding-left:5px;'><form id='geoDraw_form'><input type='text' value='0' id='geoDraw_val' style='position:relative;bottom:7px;width:30px;background-color:#155555;color:#cccccc;border:none;text-align:right;'></form></div></td>";
 		html+="<td align='center' style='overflow:hidden;height:20px;width:40px;font-size:70%;overflow:hidden;'><div style='position:relative;bottom:10px;right:3px;'>#Points</div></td>";
-		html+="<td align='center' style='overflow:hidden;height:20px;width:100px;'><div class='geoDrawPromptButton' id='geoDrawLineTypeDiv' onClick='geoDrawSwitchType(0);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2100+(geoPos.length/2))+";cursor:pointer;' >"+curLine+"</div></td>";
+		html+="<td align='center' style='overflow:hidden;height:20px;width:150px;'><div class='geoDrawPromptButton' id='geoDrawLineTypeDiv' onClick='geoDrawSwitchType(0);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2100+(geoPos.length/2))+";cursor:pointer;' >"+curLine+"</div></td>";
 				
-		var curFill=geoDrawFillType==1?'Filled':'Outline';
-		html+="<td align='center' style='overflow:hidden;height:20px;width:100px;'><div class='geoDrawPromptButton' id='geoDrawFillTypeDiv' onClick='geoDrawSwitchType(1);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2200+(geoPos.length/2))+";cursor:pointer;' >"+curFill+"</div></td>";
-		var curClose=geoDrawClosedType==1?'Closed Shape':'Open Path';
-		html+="<td align='center' style='overflow:hidden;height:20px;width:100px;'><div class='geoDrawPromptButton' id='geoDrawClosedTypeDiv'onClick='geoDrawSwitchType(2);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >"+curClose+"</div></td>";
+		var curFill=geoDrawFillType==1?'[ Filled ]':'[ Outline ]';
+		html+="<td align='center' style='overflow:hidden;height:20px;width:150px;'><div class='geoDrawPromptButton' id='geoDrawFillTypeDiv' onClick='geoDrawSwitchType(1);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2200+(geoPos.length/2))+";cursor:pointer;' >"+curFill+"</div></td>";
+		var curClose=geoDrawClosedType==1?'[ Closed ]':'[ Open ]';
+		html+="<td align='center' style='overflow:hidden;height:20px;width:150px;'><div class='geoDrawPromptButton' id='geoDrawClosedTypeDiv'onClick='geoDrawSwitchType(2);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >"+curClose+"</div></td>";
 		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div style='position:relative;top:-14px;opacity:.7;filter:alpha(opacity=70);color:#227788;'>|</div></td>";
-		html+="<td align='center' style='overflow:hidden;height:20px;width:100px;'><div class='geoDrawPromptButton' id='geoDrawUndoDiv' onClick='var tmpGP=[...geoPos];geoPos=[...geoPosUndo];geoPosUndo=[...tmpGP];var tmpGPS=[...geoPosSegments];geoPosSegments=[...geoPosSegmentsUndo];geoPosSegmentsUndo=[...tmpGPS];geoDrawSplitPoint(-1);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2000+(geoPos.length/2))+";cursor:pointer;' >Undo Edit</div></td>";
+		html+="<td align='center' style='overflow:hidden;height:20px;width:150px;'><div class='geoDrawPromptButton' id='geoDrawUndoDiv' onClick='var tmpGP=geoPos;geoPos=geoPosUndo;geoPosUndo=tmpGP;geoDrawSplitPoint(-1);' style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2000+(geoPos.length/2))+";cursor:pointer;' >[ Undo Edit ]</div></td>";
 		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div style='position:relative;top:-14px;opacity:.7;filter:alpha(opacity=70);color:#227788;'>|</div></td>";
-		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div class='geoDrawPromptButton' id='geoDrawHelpDiv' onClick=\"dialogueOption(1, 'shapeToolShorts');\" style='letter-spacing:3px;height:20px;width:50px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' > ? </div></td>";
+	if(devMode==1){	
+		html+="<td align='center' style='overflow:hidden;height:20px;width:150px;'><div class='geoDrawPromptButton' id='geoDrawPrintArray' onClick=\"printArray('["+sW+","+sH+"]', geoPos);\" style='letter-spacing:3px;height:20px;width:150px;font-size:90%;z-index:"+(2000+(geoPos.length/2))+";cursor:pointer;' >[ Print Array ]</div></td>";
 		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div style='position:relative;top:-14px;opacity:.7;filter:alpha(opacity=70);color:#227788;'>|</div></td>";
-		html+="<td align='center' style='overflow:hidden;height:20px;width:90px;'><div class='geoDrawPromptButton' id='geoDrawAcceptDiv'onClick='geoTool=2;geoDrawCloseGeo(0);' style='letter-spacing:3px;height:20px;width:100px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >Accept</div></td>";
-		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div class='geoDrawPromptButton' id='geoDrawExitDiv'onClick='geoDrawClose(0);' style='letter-spacing:3px;height:20px;width:50px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >[X]</div></td>";
-
-		html+="</tr><tr><td colspan='" + (html.match(/<td/g).length-2) + "' align='right'><div style='position:relative;bottom:25;'><input type='text' value='[]' id='geoDrawShapePointList' style='width:500px;background-color:#155555;color:#cccccc;border:none;text-align:right;'></div></td>";
-		html+="<td colspan='2' align='right'><div style='position:relative;bottom:25;'><div class='geoDrawPromptButton' id='geoDrawCopyPositionsDiv'onClick=\"copyObject('geoDrawShapePointList','..Copied Point Positions..');\" style='text-align:center;letter-spacing:3px;height:20px;width:172px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >Copy Positions</div></div></td>";
+	}
+		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div class='geoDrawPromptButton' id='geoDrawHelpDiv' onClick=\"dialogueOption(1, 'shapeToolShorts');\" style='letter-spacing:3px;height:20px;width:50px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >[ ? ]</div></td>";
+		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div style='position:relative;top:-14px;opacity:.7;filter:alpha(opacity=70);color:#227788;'>|</div></td>";
+		html+="<td align='center' style='overflow:hidden;height:20px;width:100px;'><div class='geoDrawPromptButton' id='geoDrawAcceptDiv'onClick='geoTool=2;geoDrawCloseGeo(0);' style='letter-spacing:3px;height:20px;width:100px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >[ Accept ]</div></td>";
+		html+="<td align='center' style='overflow:hidden;height:20px;width:50px;'><div class='geoDrawPromptButton' id='geoDrawExitDiv'onClick='geoDrawClose(0);' style='letter-spacing:3px;height:20px;width:50px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >[ X ]</div></td>";
 		html+="</tr></table></div>";
-
 		$("#"+button).width(divWidth);
 		$("#"+button).height(divHeight);
 		$("#"+button).html(html);
-		$("#"+button).css({'top':(origSH*.02),'right':(origSW*.055)});
+		$("#"+button).css({'top':(origSH*.07),'right':(origSW*.055)});
 		
-
 		controlText=$("#"+button).html();
 		
 		html="<canvas style='z-index:"+(1900)+";position:relative;cursor:default;' id='"+button+"_Canvas' height='"+divHeight+"' width='"+divWidth+"'></canvas>\n";
@@ -938,34 +848,24 @@ function drawGeoPrompt(val){
 			$("#"+button).attr("onMouseOut", "geoToolStopDraw=0;bevelShape(('"+button+"_Div'),0,0,('"+button+"_Canvas'),.9,5,3,1,1,1,1,1,0,0);");
 			eval($("#"+button).attr("onMouseOut"));
 		}
-						
-		setInputFocusActions('geoDrawShapePointList'); // Add Focus & Blur events
-		var curObj="#geoDrawShapePointList";
-		$(curObj).on('keyup keypress', function(e){
-			keyHit=e.keyCode || e.which;
-			if(keyHit===13){
-				geoDrawCheckPositionInput();
-				e.preventDefault();
-				return false;
-			}
-		});
+			
 	}
 }
 function geoDrawSwitchType(mod){
 	var type,text;
 	if(mod==0){
 		geoDrawLineType=(geoDrawLineType+1) % 2;
-		text=geoDrawLineType==1?'Curved':'Straight';
+		text=geoDrawLineType==1?'[ Curved ]':'[ Line ]';
 		$("#geoDrawLineTypeDiv").text(text);
 		doGeoDraw("curDraw",0);
 	}else if(mod==1){
 		geoDrawFillType=(geoDrawFillType+1) % 2;
-		text=geoDrawFillType==1?'Filled':'Outline';
+		text=geoDrawFillType==1?'[ Filled ]':'[ Outline ]';
 		$("#geoDrawFillTypeDiv").html(text);
 		doGeoDraw("curDraw",0);
 	}else{
 		geoDrawClosedType=(geoDrawClosedType+1) % 2;
-		text=geoDrawClosedType==1?'Closed Shape':'Open Path';
+		text=geoDrawClosedType==1?'[ Closed ]':'[ Open ]';
 		$("#geoDrawClosedTypeDiv").html(text);
 		doGeoDraw("curDraw",0);
 	}
@@ -980,90 +880,6 @@ function geoDrawUpdateRefreshWindow(){
 	refreshWindow=[checkMin[0],checkMin[1],checkMax[0],checkMax[1]];
 	refreshWindowStore=refreshWindow;
 	return true;
-}
-function drawGeoUpdatePosList(){
-	var list=document.getElementById("geoDrawShapePointList");
-	if(list){
-		var tmpGeoPos=[...geoPos];
-		var len=tmpGeoPos.length;
-		var segLen=geoPosSegments.length;
-		var curPos=-1;
-		var outputValue=[];
-// [ [ 758,118, 821,166, 823,200, 907,199, 1009,163 ], [ 1079,127, 1080,167.5, 1081,208, 1019,207, 1028,144, 924,134, 791,102 ] ]
-// [ 755,163, 811.33,153.33, 886.44,140.44, 924,134, 995,186.5, 1066,239, 881,300, 696,361, 690.5,293.5, 685,226, 685,226, 685,226 ]
-
-
-		for(var c=0; c<segLen; ++c){
-			len=geoPosSegments[c]*2;
-			var tmpGeoPosStringArr=[];
-			for(var x=0; x<len; ++x){
-				curPos+=1;
-				tmpGeoPosStringArr.push( parseInt(tmpGeoPos[curPos]*100)*.01 + (x==len-1?"":(x%2==1?", ":",")) );
-			}
-			var val="[ " + (tmpGeoPosStringArr.join('')) + " ]";
-
-			if(segLen==1){
-				outputValue=val;
-			}else{
-				outputValue.push(val);
-			}
-		}
-		if(segLen>1){
-			outputValue="[ " + (outputValue.join(', ')) + " ]";
-		}
-		list.value=outputValue;
-	}
-}
-function geoDrawCheckPositionInput(){
-	var input=document.getElementById("geoDrawShapePointList");
-	list=eval( input.value.replace(/[^0-9,\[\].]/g,'') );
-	if(list.length>0){
-		tmpGeoPosSegments=[];
-		var tmpGeoPos=[];
-		for(var x=0; x<list.length;++x){
-			if(typeof(list[x])=="object"){
-				tmpGeoPos.push(...list[x]);
-				tmpGeoPosSegments.push(list[x].length*.5);
-			}else{
-				tmpGeoPos.push(list[x]);
-				if(tmpGeoPosSegments.length==0){
-					tmpGeoPosSegments.push(0);
-				}
-				tmpGeoPosSegments[0]+=x%2==0?1:0;
-			}
-		}
-		geoPos=[...tmpGeoPos];
-		geoPosSegments=tmpGeoPosSegments;
-// [ [ 758,118, 821,166, 823,200, 907,199, 1009,163 ], [ 1079,127, 1080,167.5, 1081,208, 1019,207, 1028,144, 924,134, 791,102 ] ]
-		//drawGeoUpdatePosList();
-		doGeoDraw("curDraw",0);
-		geoDrawRedrawHandles();
-	}
-}
-function geoDrawRedrawHandles(){
-		$("#geoDrawGuides").html('');
-		var size=6;
-		var half=size*.5;
-		var geoPosLen=geoPos.length*.5;
-		
-		var curSegment=0;
-		var curSegCap=geoPosSegments[0];
-		for(var x=0; x<=geoPosLen; ++x){
-			if(x == curSegCap){
-				curSegment+=1;
-				curSegCap+=geoPosSegments[curSegment];
-			}
-			var name="geoDrawSpline_"+(x+1);
-			var html="<canvas class='vert' id='"+name+"' modPoint='"+(x+1)+"' segment='"+curSegment+"' mX='' mY='' origX='' origY='' height='"+size+"px' onMouseDown=\"geoToolStopDraw=1;geoDrawEditVertex(0, '"+name+"',[-1]);\" onMouseUp='geoToolStopDraw=3;' width='"+size+"px' style='z-index:"+(2000+x)+";position:absolute;top:0;left:0;cursor:pointer;'></canvas>"
-			$("#geoDrawGuides").append(html);
-			$("#"+name).css({ "left":geoPos[x*2]-half,"top":geoPos[x*2+1]-half });
-			$("#"+name).attr({ "mX":geoPos[x*2]-half,"mY":geoPos[x*2+1]-half, "origX":geoPos[x*2]-half,"origY":geoPos[x*2+1]-half });
-			$("#"+name).attr('onclick',  "if(geoTool>=2){cmdDoubleClick('"+name+"',20,\"geoDrawSplitPoint('"+name+"');\",0);}");
-			
-			$('#geoDraw_val').val(x+1); // Is this why it needs to start from 1 not 0????
-			
-			drawGeo([3,3],1,6,[180,180,200],150,-1,-1,name);
-		}
 }
 /////////////////////////
 

@@ -264,13 +264,13 @@ function mapRender(){
 	var curMS=Date.now();
 	runner++;
 	
-	//mapUpdateCamera();
+	mapUpdateCamera();
 		
 	var curCrop=1;
-	//mainMenuShaderPass.uniforms.cropTop.value=1-((1-mapMainMenuCropTop)*curCrop);
+	mainMenuShaderPass.uniforms.cropTop.value=1-((1-mapMainMenuCropTop)*curCrop);
 	
-	//mainMenuShaderPass.uniforms.cropBottom.value=mapMainMenuCropBottom*curCrop;
-	var menuBottom=(1-mapMainMenuCropBottom*curCrop)*sH;
+	mainMenuShaderPass.uniforms.cropBottom.value=mapMainMenuCropBottom*curCrop;
+	var menuBottom=(1-mapMainMenuCropBottom*curCrop)*sH
 	
 	var offsetNoise=Math.sin(runner*.0187+Math.cos(runner*.003)+352.15);
 	offsetNoise=Math.sin(runner*.00145+Math.cos(runner*.0075+165.91)+offsetNoise)*.5+.5;
@@ -280,13 +280,13 @@ function mapRender(){
 	mainMenuShaderPass.uniforms.flicker.value=offsetNoise;
 	mainMenuShaderPass.uniforms.time.value=runner;
 	
-	map_glComposer.render();
+	mapTempMenuComposer.render();
 			
 	objsBooted=1;
 	
-	/*if(mapPause == 0){
+	if(mapPause == 0){
 		setTimeout(function(){
 			requestAnimationFrame(mapRender);
 		},25);
-	}*/
+	}
 }

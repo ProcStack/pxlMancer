@@ -92,6 +92,10 @@ document.addEventListener('touchstart', function(e) {if(active>=0){startTouch(e,
 document.addEventListener('touchmove', function(e) {if(active>=0){doDragTouch(e);}}, false);
 document.addEventListener('touchend', function(e) {if(active>=0){endTouch(e);}}, false);
 document.addEventListener(mousewheelevt, function(e) {if(active>=0){displaywheel(e);}}, true);
+
+//document.addEventListener('focus', imbyFocus(), false);
+//document.addEventListener('blur', imbyBlur(), false);
+
 //document.addEventListener('touchcancel', function(e) {endTouch(e);}, false);
 //$(document).on('touchend touchcancel', function(e) {
 //    if(active>=0){endTouch(e);}
@@ -110,54 +114,66 @@ function runInitScripts(){ // Run initializing scripts
 		bootStep(1,"Init.");
 		setTimeout(function(){ // All the setTimeouts here on prevents jquery death. It still happens now and then on slow computers. :(
 			//launchFullscreen(window.document.documentElement);
-			bootStep(1,"Building Backgrounds..");
-			setTimeout(function(){ // Also, let that loader load
-				if(mobile==0){// || slimLoad==0){
-					tempBgInit();
-				}
+
+			bootStep(1,"Prepping WebGL..");
+			setTimeout(function(){	
+				
+				mapCanvas=document.getElementById("glDraw");
+				mapW=window.innerWidth*mapResPerc;
+				mapCanvas.width=window.innerWidth;
+				mapH=window.innerHeight*mapResPerc;
+				mapCanvas.height=window.innerHeight;
+				mapBootEngine();
+				mapRender(runner);
+
 				bootStep(1,"Building Backgrounds..");
-				setTimeout(function(){ // Step by step
+				setTimeout(function(){ // Also, let that loader load
 					if(mobile==0){// || slimLoad==0){
-						setLayerRes(0, [origSW/1.5,origSH/1.5], 1, 1);
-						gradientInit(1,1);
-						setLayerRes(0, [origSW,origSH], 1, 1);
-					}else{
-						gradientInit(0,1);
-						$('#tempBG').remove();
+						tempBgInit();
 					}
-					saveInit();
-					bootStep(1,"Building Color Sphere..");
-					setTimeout(function(){ // It takes a while to load...	
-						buildColorSphere();
-						bootStep(1,"Building Controls..");
-						setTimeout(function(){
-							buildControls();
-							bootStep(1,"Building Layers..");
+					bootStep(1,"Building Backgrounds..");
+					setTimeout(function(){ // Step by step
+						if(mobile==0){// || slimLoad==0){
+							setLayerRes(0, [origSW/1.5,origSH/1.5], 1, 1);
+							gradientInit(1,1);
+							setLayerRes(0, [origSW,origSH], 1, 1);
+						}else{
+							gradientInit(0,1);
+							$('#tempBG').remove();
+						}
+						saveInit();					
+						bootStep(1,"Building Color Sphere..");
+						setTimeout(function(){ // It takes a while to load...	
+							buildColorSphere();
+							bootStep(1,"Building Controls..");
 							setTimeout(function(){
-								buildLayersWindow(); // Needs to be after buildColorSphere();
-								bootStep(1,"Building Dialogues..");
+								buildControls();
+								bootStep(1,"Building Layers..");
 								setTimeout(function(){
-									buildDialogues();
-									if(mobile==0){
-										sliderGen(['editLayer_opacity','editBackground_patternQuality','editBackground_shiftColor','editBackground_satch','editBackground_patternBrightness'],['layerSetOpacity()','runDisplayPattern()','runDisplayPattern()','runDisplayPattern()','runDisplayPattern()'],0);
-									}
-									if(mobile==0){
-										setBGPatterns();
-									}
-									bootStep(1,"Pariferals..");
+									buildLayersWindow(); // Needs to be after buildColorSphere();
+									bootStep(1,"Building Dialogues..");
 									setTimeout(function(){
-										initScalers();
-										//runFilters(0);
-										setInputFocusActions();
-										setLayerRes(0, [sW,sH], 1,1);
-										bootStep(1,"Welcome!");
+										buildDialogues();
+										if(mobile==0){
+											sliderGen(['editLayer_opacity','editBackground_patternQuality','editBackground_shiftColor','editBackground_satch','editBackground_patternBrightness'],['layerSetOpacity()','runDisplayPattern()','runDisplayPattern()','runDisplayPattern()','runDisplayPattern()'],0);
+											setBGPatterns();
+										}
+										prepQualitySettings();
+										bootStep(1,"Pariferals..");
 										setTimeout(function(){
-											var imbixStart=initImbix();
-											imbixClick=1;
-											active=0;
-											cutLoader();
-											maximizeImbix();
-										},20);
+											initScalers();
+											//runFilters(0);
+											setInputFocusActions();
+											setLayerRes(0, [sW,sH], 1,1);
+											bootStep(1,"Welcome!");
+											setTimeout(function(){
+												var imbixStart=initImbix();
+												imbixClick=1;
+												active=0;
+												cutLoader();
+												maximizeImbix();
+											},20);
+										},10);
 									},10);
 								},10);
 							},10);
@@ -828,4 +844,12 @@ function runNewDocumentPrompt(checkPrompt,run,rand,drawPosPrompt,messPosPrompt){
 		menuVis(1,1);
 	}
 }
+
+function prepQualitySettings(){
+
+	// sl_qualityPercent
+	document.getElementById('sl_qualityPercent_val').value=machineBenchmark;
+	//document.getElementById('sl_qualityPercent_val').parentNode.submit();
+}
+
 

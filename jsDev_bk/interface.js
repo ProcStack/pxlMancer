@@ -1720,23 +1720,3 @@ function mobileImportImage(){
 function modText(){
 	
 }
-
-function copyObject(obj,msg){
-	var dom=document.getElementById(obj);
-	//var t=typeof(dom);
-	//console.log(t);
-	var curSelection=window.getSelection();
-	if(dom.hasAttribute("value")){
-		dom.select();
-		document.execCommand('copy');
-		var tmpName=tempWindow(msg,[-1,-1],'',8,.5,0,-1);
-		dom.blur();
-	}
-	try{
-		curSelection.focusNode.select;
-	}catch{
-		try{
-			curSelection.focusNode.select();
-		}catch{}
-	}
-}

@@ -1,8 +1,3 @@
-// I was always told to not rely on global variables
-// ...
-// HAHAHHAHA ... oh man... I should really reorganize and cull down
-// REAP THE WASTE!
-
 var bgcolor="#051525";
 var imbix = null;
 var curCommand = null;
@@ -16,10 +11,6 @@ var dragClick=0;
 var dragging=0;
 var doubleClick=0;
 var mButton=0;
-var modKey_ctrl=false;
-var modKey_alt=false;
-var modKey_shift=false;
-var modKey_tab=false;
 var slDown=0;
 var imbixOver=0;
 var imbixPosX=0;
@@ -31,9 +22,6 @@ var sW=window.innerWidth;// * ratio;
 var sH=window.innerHeight;// * ratio;
 var origSW=sW;
 var origSH=sH;
-var machineBenchmark=1;
-
-
 var mouseX = sW/2;
 var mouseY = sH*.25;
 var howToMouseX=mouseX;
@@ -88,11 +76,6 @@ var scroller=0;
 var dialogueOpen=0;
 var diaVal="";
 var onDia=0;
-
-var uiButtonName="ringingCircle";
-var uiBuildTime=300;
-var uiIconScale=.5;
-var uiIconDrawScale=.75;
 var setMenu=1;
 var divs=new Array("clear","drawOption","mirrorOption","filterOption","prefOptions");
 var skipMenuSlide='';
@@ -132,8 +115,8 @@ var tearOffId=0;
 var promptName='';
 var lineQuality='round';
 var layerCheck=1;
-var swatchSet=[0,0,0,0,0,0,0,0,0,0]; // 0-9
-var swatchStore=['','','','','','','','','','']; // 0-9
+var swatchSet=[0,0,0,0,0,0,0,0,0,0];
+var swatchStore=['','','','','','','','','',''];
 var storeKeyHit=0;
 var storeKeyHold=0;
 var grabColorSphereVal=0;
@@ -152,10 +135,7 @@ var howToSkip=0;
 var geoTool=0;
 var geoToolStopDraw=0;
 var geoPos=new Array();
-var geoPosSegments=[0];
-var geoToolSegment=0;
 var geoPosUndo=new Array();
-var geoPosSegmentsUndo=[0];
 var geoDrawSelected=new Array();
 var geoDrawMarquee=new Array();
 var geoDrawLineType=1;

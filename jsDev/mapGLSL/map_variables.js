@@ -1,4 +1,4 @@
-var mapCore="glDraw";
+var mapCore="map-core";
 var mapEngine,mapGl,mapCam,mapScene,mapComposer,mapDepthComposer,mapSlimComposer;
 var mapResPerc=mobile?.25:.5;
 var mapAutoQuality=1;
@@ -7,6 +7,8 @@ var loadFullTome=0;
 
 var mapProcessScene=null; // mapProcessScene.add(processorObj[0]);
 var mapCanvas,mapW,mapH;
+var sW=window.innerWidth;
+var sH=window.innerHeight;
 var mapMouse=new THREE.Vector2();
 // runShadowHelper viewer
 // Might be needed for processing the built shadow map
@@ -87,14 +89,13 @@ var xyDeltaData={
 	'netDistance':[0,0,0], //vec2
 	'curDistance':[0,0,0], //vec2
 };
-
 var mouseWheelEvt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" ;
 var mouseWheelDelta=0;
 var mouseButton=0;
 var prevCursor=null;
 var IE = document.all?true:false;
-//var touch =0;
-//var touchScreen=0;
+var touch =0;
+var touchScreen=0;
 var startTime=Date.now();
 var groupList=[];
 var geoList=[];
@@ -104,7 +105,7 @@ var geoFunctionList=[];
 var lightList=[];
 var lightMapList=[];
 var mapPause=0;
-//var runner=-1;
+var runner=-1;
 var objsBooted=0;
 var particlesBooted=0;
 var pi=3.14159265358979;

@@ -1,4 +1,4 @@
-/* function boot(){
+function boot(){
 	if(verbose){
 		console.log(mapToDoList);
 		console.log("Verbose console logs are ON");
@@ -21,9 +21,9 @@
 	mapBootEngine();
 	mapRender(runner);
 	//mapPrepGUI();
-} */
+}
 
-/*function getMouseXY(e){
+function getMouseXY(e){
 	e.preventDefault();
 	if(touchScreen==0){
 		mouseX=e.clientX;
@@ -36,7 +36,7 @@
 	mapMouse.x=(mouseX/sW)*2 - 1;
 	mapMouse.y=-(mouseY/sH)*2 + 1;
 }
-*/
+
 //if(addToProcessorScene){mapProcessScene.add(processorObj[0]);}
 function mapOnDown(e){
 	e.preventDefault();
@@ -94,7 +94,7 @@ function mapOnExitMode(){
 	setCursor("default");
 	mapCamObjLatchPrev=null;
 }
-/* function mouseWheel(e){ // Scroll wheel
+function mouseWheel(e){ // Scroll wheel
 	//Ehhhh IE be damned...
 	// ... Bleh ... I'll address issues after MAP is done
 	var delta=Math.sign(e.detail || e.wheelDelta);
@@ -123,7 +123,7 @@ function mapOnExitMode(){
 		}
 	}
 }
-*/
+
 function resizeRenderResolution(){
 	mapW=(sW=window.innerWidth)*mapResPerc;
 	mapH=(sH=window.innerHeight)*mapResPerc;
@@ -137,7 +137,7 @@ function resizeRenderResolution(){
 	mapCam.updateProjectionMatrix();
 	mapEngine.render(mapScene,mapCam);
 }
-/*
+
 document.onkeyup=function(e){keyUpCall(e);};
 function keyUpCall(e){
 	e.preventDefault();
@@ -190,7 +190,7 @@ function endTouch(e) {
 	var touch = e.touches[0];
 	e.preventDefault();
 }
-*/
+
 function mapAutoQualityToggle(val=-1){
 	if(val==-1){
 		mapAutoQuality=(mapAutoQuality+1)%2;
@@ -415,171 +415,12 @@ function tListIdent(parentObj=null){
 	return ident;
 }
 
-
-function genIntroMesh(){
-		var xDiff=200;
-		var yDiff=30;
-		var yAdd=.3;
-		var noiseMult=10;
-		var noiseSpeed=.04;
-		var noiseOffset=imbixTimer*noiseSpeed;
-		var noiseYMult;
-		var x,y,xPos,yPos,xTo,yTo,xNoise,yNoise,lineMult;
-		var lineCount=[1,2,3,4,5,6,5,2];
-		var gridColor=[120,200,160];
-		var pointColor=[140,225,200];
-		clearScreen(curCanvas);
-		var pId=-1;
-		var pPos=[];
-		var pScale=[];
-		var rowMult=[];
-		var connectArray={
-			0 : [1,2],
-			1 : [3,4],
-			2 : [4,5],
-			3 : [6,7],
-			4 : [7,8],
-			5 : [8,9],
-			6 : [10,11],
-			7 : [11,12],
-			8 : [12,13],
-			9 : [13,14],
-			10 : [15,16],
-			11 : [16,17],
-			12 : [17,18],
-			13 : [18,19],
-			14 : [19,20],
-			15 : [21],
-			16 : [21,22],
-			17 : [22,23],
-			18 : [23,24],
-			19 : [24,25],
-			20 : [25],
-			21 : [22],
-			22 : [26],
-			23 : [26,27],
-			24 : [27,25],
-			25 : [],
-			26 : [27]
-			};
-		
-		for(y=0; y<lineCount.length;++y){
-			for(x=0; x<lineCount[y];++x){
-				pId+=1;
-				rowMult.push(y);
-				xPos=(x/lineCount[y])*(xDiff*lineCount[y]) + (sW-xDiff*(lineCount[y]-1))/2;
-				yPos=y*yDiff + (sH-(lineCount.length+2)*yDiff)/2 + yAdd*y*y*y + sH/5;
-				noiseYMult=(y+3)/(lineCount.length+3);
-				xNoise=Math.sin(noiseOffset + x*31 + y*42 + pId + Math.cos( noiseOffset*1.5 - x*14 + y*51 - pId)*Math.cos(-noiseOffset*.8+x*56+y*26+pId)*3) * noiseMult*noiseYMult;
-				yNoise=Math.cos(-noiseOffset + x*20 + y*32 - pId + Math.sin( -noiseOffset*.9 - x*45 + y*22 + pId)*Math.sin(noiseOffset*1.2+x*25+y*62+pId)*3) * noiseMult*1.5*noiseYMult;
-				xPos+=xNoise;
-				yPos+=yNoise;
-				
-				if(y == 0){
-					yPos+=15;
-				}else if(y == 1){
-					yPos+=5;
-				}else if(y==6 || y==7){
-					if(lineCount[y]>2){
-						if(x == 0 || x == lineCount[y]-1){
-							yPos-=10;
-						}
-						if(x == 1 || x == lineCount[y]-2){
-							yPos+=10;
-						}
-					}else{
-						yPos-=5;
-					}
-				}else if(y==5){
-					if(x==2){
-						xPos-=5;
-					}else if(x==3){
-						xPos+=5;
-					}
-				}
-				
-				pPos.push(xPos);
-				pPos.push(yPos);
-				pScale.push((1+7*noiseYMult));
-			}
-		}
-		for(y=0; y<Object.keys(connectArray).length;++y){
-			for(x=0; x<connectArray[y].length;++x){
-				xPos=pPos[y*2];
-				yPos=pPos[y*2+1];
-				xTo=pPos[connectArray[y][x]*2];
-				yTo=pPos[connectArray[y][x]*2+1];
-				lineMult=((rowMult[y]+3)/(lineCount.length+3));
-				drawLine([xPos,yPos,xTo,yTo],3*lineMult,gridColor,1,0,curCanvas,[-1]);
-			}
-		}
-		for(y=0; y<(pPos.length/2);++y){
-			xPos=pPos[y*2];
-			yPos=pPos[y*2+1];
-			drawGeo([xPos,yPos],1,pScale[y],pointColor,1,-1,-1,curCanvas);
-		}
-		return pPos;
-
-	
-}
-
-
-// -------------
-// NOT MINE -- REFERENCE ONLY 
-// https://stackoverflow.com/questions/18016533/threejs-custom-3d-geometry-using-vertices
-function initGeometry( R , L) {
-    var geometry = new THREE.Geometry();
-
-    var deg;
-    var f = 0;  
-    for( deg = 0; deg < 90; deg++,f += 4 ){
-        var ca = deg * 0.01745329252;//cache current angle
-        var na = (deg+1) * 0.01745329252;//cache next angle (could do with a conditional and storing previous angle)
-        var ccos = Math.cos(ca);//current cos
-        var csin = Math.sin(ca);//current sin
-        var ncos = Math.cos(na);//next cos
-        var nsin = Math.sin(na);//next sin
-
-        var tl = new THREE.Vector3( R * ccos, L * .5, R * csin);//top left = current angle, positive y
-        var bl = new THREE.Vector3( R * ccos,-L * .5, R * csin);//bottom left = current angle, negative y
-        var tr = new THREE.Vector3( R * ncos, L * .5, R * nsin);//top right = next angle, positive y
-        var br = new THREE.Vector3( R * ncos,-L * .5, R * nsin);//bottom right = next angle, negative y
-
-        /*
-        tl--tr
-        |  /|
-        | / |
-        |/  |
-        bl--br
-        */
-        geometry.vertices.push(tl,tr,br,bl);//notice vertices are added in (cw) order
-        geometry.faces.push(new THREE.Face4(f,f+1,f+2,f+3));//add the correct face indices, easy with a second counter
-
-    }
-
-    object = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:0x660033,         side:THREE.DoubleSide}));
-    object.position.set(0,0,0);
-    object.rotation.x = Math.PI * .35;//a bit of rotation to make the structure visible
-    object.scale.set(.35,.35,.35);//again, to make things easier to see
-    scene.add(object);
-}
-
-
-
-
-
-
-
-
-
-
 function mapBootEngine(){
 	
 	// Rederer
 	mapEngine=new THREE.WebGLRenderer({
 		canvas: mapCanvas,
 		antialias: true,
-		alpha: true,
 	});
 	//mapEngine.autoClear=false;
 	if(verbose){
@@ -591,7 +432,7 @@ function mapBootEngine(){
 		console.log("-- Depth Composer pass currently not used, --");
 		console.log("  -- A future technology for Metal Asylum --");
 	}
-	mapEngine.setClearColor(0x000000, 0);
+	mapEngine.setClearColor(0x000000);
 	mapEngine.setPixelRatio(window.devicePixelRatio);
 	mapEngine.setSize(mapW/mapResPerc, mapH/mapResPerc);
 	//mapEngine.gammaOutput=true;
@@ -637,10 +478,6 @@ function mapBootEngine(){
 	//mapProcessScene.add(groundMesh.clone());
 	groundMesh.receiveShadow=true;
 	geoList["table"]=[groundMesh,ground];
-	
-	
-	//var intoMesh=genIntroMexh();
-	//geoList['introMesh']=introMesh;
 	
 	var ambLight=new THREE.AmbientLight(0xffffff,.1);
 	mapScene.add(ambLight);
@@ -706,7 +543,6 @@ function mapBootEngine(){
 
 	///////////////////////////////////////////////////////
 	// Temp Main Menu Latch
-	
 	mainMenuShader=new THREE.ShaderMaterial({
 		uniforms:{
 			"tDiffuse":{type:"t",value:0,texture:null},
@@ -718,16 +554,14 @@ function mapBootEngine(){
 		vertexShader:document.getElementById("anchoredObjectVert").textContent,
 		fragmentShader:document.getElementById("tempMainMenuFrag").textContent
 	});
-	
 	// Composer - Default Scene; All objects
-	map_glComposer = new THREE.EffectComposer(mapEngine);
+	mapTempMenuComposer = new THREE.EffectComposer(mapEngine);
 	mainMenuPass=new THREE.RenderPass(mapScene,mapCam);
 	mainMenuShaderPass=new THREE.ShaderPass(mainMenuShader);
 	mainMenuShaderPass.material.transparent=true;
 	
-	map_glComposer.addPass(mainMenuPass);
-	map_glComposer.addPass(mainMenuShaderPass);
-	//mainMenuPass.renderToScreen=true;
+	mapTempMenuComposer.addPass(mainMenuPass);
+	mapTempMenuComposer.addPass(mainMenuShaderPass);
 	mainMenuShaderPass.renderToScreen=true;
 	
 }

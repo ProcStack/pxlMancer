@@ -29,22 +29,10 @@ function imbixBotMove() {
 		if(mobile==0){
 			imbixFieldMove(posArray);
 		}
-		if(!paused){
-			setTimeout(imbixBotMove,50);
-		}
+		setTimeout(imbixBotMove,50);
 	}else{
-		document.removeEventListener("focus", imbyFocus);
-		document.removeEventListener("blur", imbyBlur);
 		clearScreen(curCanvas);
 	}
-}
-
-function imbyFocus(){
-	paused=false;
-	imbixBotMove();
-}
-function imbyBlur(){
-	paused=true;
 }
 
 function imbixNetGen(){
@@ -292,7 +280,6 @@ function initImbix() {
 
 	imbixOver=0;
 	imbix = document.getElementById('imbixBot');
-	paused=document.hasFocus();
 	imbixBotMove();
 	
 }

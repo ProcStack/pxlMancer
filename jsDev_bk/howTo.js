@@ -774,7 +774,7 @@ function howTo_genCloseButton(val,disp){
 			html+="<td align='center' style='overflow:hidden;height:20px;'><div class='howToPromptButton' id='howToExitDiv' onClick='howTo_genCloseButton(0,1);' align='center' style='letter-spacing:3px;height:20px;font-size:90%;z-index:"+(2300+(geoPos.length/2))+";cursor:pointer;' >[X] Quit How To</div></td>";
 			html+="</tr></table></div></div>";
 			$("#"+button).append(html);
-			$("#howTo_parent").css({'top':(origSH*.07),'right':(origSW*.12)});
+			$("#howTo_parent").css({'top':(origSH*.07),'right':(origSW*.12), 'zIndex':30000});
 			
 			controlText=$("#howTo_closeButton").html();
 			
