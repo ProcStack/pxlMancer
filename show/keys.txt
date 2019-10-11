@@ -1,0 +1,17 @@
+Only on release
+1=97
+2=98
+3=99
+4=100
+5=101
+6=102
+7=103
+8=104
+9=105
+0=96
+
+Only on release-
+shift=16
+
+Event key toggle value=
+window.event.shiftKey

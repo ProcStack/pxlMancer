@@ -1,0 +1,11 @@
+
+AddHandler application/manifest+json .json
+AddHandler text/cache-manifest .appcache
+AddHandler text/cache-manifest .manifest
+
+ErrorDocument 404 http://pxlmancer.com
+
+ErrorDocument 404 http://pxlmancer.com
+<filesMatch ".(css|php|ico|js)$">
+Header set Cache-Control "max-age=86400, public"
+</filesMatch>

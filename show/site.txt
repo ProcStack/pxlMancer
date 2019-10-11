@@ -1,0 +1,5 @@
+http://www.acunetix.com/websitesecurity/cross-site-scripting/
+http://ogp.me/
+http://www.businessnewsdaily.com/7808-google-search-ranking-mobile.html
+https://globalspex.com/logo-dimensions/
+http://stackoverflow.com/questions/39523943/preventing-php-from-running-a-second-time-from-service-worker-install

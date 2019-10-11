@@ -1,0 +1,33 @@
+Intro; (5 minutes)
+-Who I am
+-Any Fox approved shots shown
+-Find out who's used crowds in Houdini before
+
+Basic Maya to Houdini pipeline; (5 minutes)
+-Show bird in maya
+-How I set up each cycles
+-FBX import into Houdini
+
+Houdini Agent Prep; (5 minutes)
+-Show export cycle nodes
+-Caveats of one extra frame per cycle
+
+Houdini Agent Source; (5 minutes)
+-Show a basic grid of the Bird as Agents
+-Show cycle choices on agent source nodes
+
+Houdini Simulation; (10 minutes)
+-Show Agent cycle locations in DOP network
+-My approach to a basic flocking system (Different than Blue Sky, similar results)
+-Transition nodes (From perched to flight)
+
+Houdini Post Simulation;  (15 minutes)
+-Show how to edit agent limbs using houdini nodes
+-Show how to edit agent limbs using VEX; scripting (Align bird head to being flat to the ground mid flight)
+
+Outro; (5 minutes)
+-Mantra -Show a render of the birds mid flight
+-Possible pipeline uses for film, "Since all joint information can easily be accessed, you can set up a system to export the joint information per frame"
+--This is how we do it in Blue Sky, is this ok to say?
+-Show link for download of the files I used in the presentation, (Is this ok, since they are my own files?)
+--Mention that I will post the files online

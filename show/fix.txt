@@ -1,0 +1,12 @@
+
+HOUDINI_OGL_MAX_GL_VERSION = 2.1
+HOUDINI_OGL_CORE_PROFILE = 1
+
+
+
+http://www.sidefx.com/docs/houdini/ref/env
+http://odforce.net/wiki/doku.php?id=customizinghoudini
+
+
+https://www.ubuntu.com/download/desktop/create-a-usb-stick-on-windows
+http://releases.ubuntu.com/16.04/

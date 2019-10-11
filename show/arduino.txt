@@ -1,0 +1,8 @@
+http://www.instructables.com/id/Interface-Python-and-Arduino-with-pySerial/
+http://www.meccanismocomplesso.org/en/arduino-tutorial-serial-data-actuator/
+
+http://arduino.stackexchange.com/questions/1013/how-do-i-split-an-incoming-string
+
+http://www.instructables.com/id/ESC-Programming-on-Arduino-Hobbyking-ESC/step3/Upload-sketch/
+
+https://www.youtube.com/watch?v=DTOK6CgXRXg

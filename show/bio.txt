@@ -1,0 +1,9 @@
+Kevin Edzenga
+I'm a fidgeter, always need to be working on something at any given time.  If not messing around making something trippy in Houdini, I'll spend my time making websites, doing arduino/electronic projects, or other DIY stuff.
+On the daily, this ends up being used for problem solving, making tools, and shot work for Crowds in the Character Simulation department at Blue Sky Studios.
+
+
+
+We will go over asset through to sim and agent post edits using Houdini's Crowd tools.
+
+We'll take a flight through Houdini's Crowd tools by bringing a little bird to life.  Along the way, we will introduce the birdy to some new buddies, use VEX to animate the flock and to modify their joints after our sim is done. Stopping the migration at mantra for the winter.

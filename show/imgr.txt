@@ -1,0 +1,67 @@
+So, I've made a thing (Heads up, its home grown Gif heavy!)
+
+[Pixelmancer loading screen] - http://pxlmancer.com/show/pxlIntro.gif
+Out of some 2+ years of on-and-off working, writing over 13000 lines of scripting by my lonesome, and losing quite a bit of sleep recently...
+(And boy howdy, do I need to clean my apartment...)
+I'm happy to say I put together a fully functioning web graphic web photo modding web app!
+
+I present Pixelmancer!
+www.pxlmancer.com
+
+[ Making some random art ] - http://pxlmancer.com/show/pxlMessingAround.gif
+We're at a point where websites can be anything their hearts' desire.
+They can be video editors, cat galleries, music makers, blogs written by cats, games, even throw up an excel spreadsheet to fool the boss; the MCP's the limit!
+So, I wanted to make something fun!
+
+
+I've made plenty of brush effects to confuse the hell out of you, till you find the couple you like and make awesome stuffs with
+[ Line, sweep, shape tool ] - http://pxlmancer.com/show/pxlBrushes.gif
+
+
+Just want to mess around? Check out the filters
+Ooo, shiny!
+But you'll need to turn the quality slider down on firefox... Sorry to the 13% of surfers out there.
+(And there are still 9% of surfers using IE??)
+[ Things melting away and color changing ] - EASY
+
+Save and load your document where ever you want
+..or just save an image, that works too...
+[ Load a document, save an image ] - http://pxlmancer.com/show/pxlLoadDoc.gif
+
+
+Make color swatches you can store to hotkeys, that also save and load with your document.
+Cause, I mean hell, it's time consuming getting swatches the way you want.
+[ Draw in the color sphere, hit a few buttons to load other spheres ] - http://pxlmancer.com/show/pxlColorSphere.gif
+
+
+Layers? Who needs layers?  Oh, right, they are sort of important...
+[ Add layers, flip order between them ] - http://pxlmancer.com/show/pxlLayers.gif
+
+
+Mobile exists, so why not mess around on the go?
+Bookmark it to your homescreen and you can load it up like an app, even with no signal or wifi!
+That way, you can pawn it off on your kids to keep them occupied on road trips between cell towers.
+Or heck, hog it to yourself!
+[ Mobile screen shots ] - http://pxlmancer.com/show/pxlMobile.gif
+
+
+By now, you might be thinking, 'Ah hell! I'm not on wifi and I just loaded this whole user sub!? Damn it !!1!'
+That sucks...I'm sorry...
+But you might also be thinking, 'There is too much crap, I don't have time for this.' 
+Damn right you don't!
+In this social environment, spare time is everything, and getting frustrated at a new web site is the least of our worries.
+So hey, just grab some cheesy poofs and sit back while you watch the 'How To'; showing you to thing and how to stuff!
+Just wash your hands after though, no one likes a cheesy mouse.
+[ How To in action ] - http://pxlmancer.com/show/pxlHowTo.gif
+
+Side note, I feel ads are the bane of my existence on the interwebs. So, from me to you ads, 'I'm not going down without a fight!'
+[ Drawing sparkle eyed finn or something similar ] - HARD
+
+Side side note, to the web devs out there, Canvas objects are extremely versatile and fun to mess with, play around with them if you haven't!
+HTML5 + Canvas = Swank tank
+And if you look at my source code, nawww, I'm not a web dev by trade; I'm sure it shows.
+
+
+-Self-promotion post ... I'll pay up-
+'All your boxes are belong to me!!' -Miss Kitty
+[ Miss Kitty ] - http://pxlmancer.com/show/pxlCatTax.png

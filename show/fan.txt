@@ -1,0 +1,8 @@
+look at the RDSon of the transistor at 100% drive, full on, with the voltage you have
+then V=IR the potential current ignoring the motor's impedance
+
+usual pin ratings are in the range of 10-100mA
+with a decent NPN you get 50x, PNP- 100x
+
+or hardware fixes- a discrete pullup of 50k will fix you there
+there are design advantages to both
