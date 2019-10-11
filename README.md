@@ -9,7 +9,7 @@
 ---
 
 <br>For an animated rundown of what pxlMancer is all about
-<br>Check out [https://imgur.com/gallery/8lSW1](https://imgur.com/gallery/8lSW1) *(wifi?!)*
+<br>Check out [https://imgur.com/gallery/8lSW1](https://imgur.com/gallery/8lSW1) *( got wifi ?! )*
 
 ---
 
