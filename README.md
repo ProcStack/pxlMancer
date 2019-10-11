@@ -23,6 +23,9 @@
 - pxlMancer.com is setup as a progressive web app, savable to home screen with &SSL Encryption* ( HTTPS )
   <br>*( Javascript Worker script example )*
 - CPU based pixel processing *( Switching to GPU based shortly )*
+  - Bluring
+  - Shift Hue
+  - Pixel Color Wondering
 - Drag DOM Object & Zoom In/Out on DOM Object with relatavistic positioning
 - Dynamically built graphical interface
   - Text Field focus/blur monitoring
