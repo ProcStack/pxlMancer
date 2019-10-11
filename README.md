@@ -5,19 +5,24 @@
 
 ![Intro Screen](show/ver1.4_IntroScreen.jpg)
 ---
-![GUI](show/ver1.4_Gui.jpg)
----
-
-<br>For an animated rundown of what pxlMancer is all about
-<br>Check out [https://imgur.com/gallery/8lSW1](https://imgur.com/gallery/8lSW1) *( got wifi ?! )*
-
----
 
 ### Key Features
 - Spline Shape Tools
 - Brush Filter Effects
   <br>Animate as you draw!
 - Save document to a file, open it anywhere!
+
+![GUI](show/ver1.4_Gui.jpg)
+---
+
+<br>**For an *animated gif* rundown of what *pxlMancer* is all about-**
+<br>&nbsp;&nbsp;&nbsp;&nbsp; Check out [https://imgur.com/gallery/8lSW1](https://imgur.com/gallery/8lSW1) *( got wifi ?! )*
+
+---
+
+<br>![Memories](show/tvKid.png)
+
+---
 
 ### Techy Stuff; Javascript Features
 - pxlMancer.com is setup as a progressive web app, savable to home screen with &SSL Encryption* ( HTTPS )
@@ -40,8 +45,6 @@
   <br>With color composite method options between any two canvases
   
 ---
-
-<br>![Memories](show/tvKid.png)
 
 **For snapshots of in-progress *dev projects* on *pxlMancer*,**
 <br>&nbsp;&nbsp;&nbsp;&nbsp; **Along with *gif animations* of functions,**
