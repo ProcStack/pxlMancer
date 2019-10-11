@@ -15,8 +15,8 @@
 ![GUI](show/ver1.4_Gui.jpg)
 ---
 
-<br>**For an *animated gif* rundown of what *pxlMancer* is all about-**
-<br>&nbsp;&nbsp;&nbsp;&nbsp; Check out [https://imgur.com/gallery/8lSW1](https://imgur.com/gallery/8lSW1) *( got wifi ?! )*
+<br>***For an* animated gif *rundown of what* pxlMancer *is all about-**
+<br>&nbsp;&nbsp;&nbsp;&nbsp; *Check out* [https://imgur.com/gallery/8lSW1](https://imgur.com/gallery/8lSW1) *( got wifi ?! )*
 
 ---
 
@@ -46,8 +46,8 @@
   
 ---
 
-**For snapshots of in-progress *dev projects* on *pxlMancer*,**
-<br>&nbsp;&nbsp;&nbsp;&nbsp; **Along with *gif animations* of functions,**
+***For snapshots of in-progress* dev projects *on* pxlMancer,**
+<br>&nbsp;&nbsp;&nbsp;&nbsp; ***Along with* gif animations *of functions,**
 <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **Check out `pxlMancer/show`**
 
 ---
