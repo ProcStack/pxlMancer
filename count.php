@@ -1,6 +1,6 @@
 <?php
 $sa_count=24632;
-$sa_lineCount=13288;
+$sa_lineCount=14017;
 if(isset($_GET['getLineCount']) || isset($_GET['count'])){
 	// Get and update user count.
 	if(isset($_GET['count'])){
@@ -18,7 +18,7 @@ if(isset($_GET['getLineCount']) || isset($_GET['count'])){
 	}
 	// Get and update line counts from all files.
 	if(isset($_GET['getLineCount'])){
-		$rootArray=Array("index.php","pixelmancer.css", "count.php","served.js");
+		$rootArray=Array("index.php","pixelmancer.css", "count.php","served.js", "submitContactMe.php");
 		$jsList=scandir("./js");
 		$count=0;
 		$lineCount=0;

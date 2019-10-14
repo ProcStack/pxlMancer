@@ -306,7 +306,33 @@ V1.4 - 6/4/2016-11/12/2016 -
   Added brush bluring
   Added introduction dialogue to ask what the user wants to do at the site
   Added Sweep brush
-  Added Shape Tool
+  Added Shape Tool
+  
+V1.5 - 10/9/2019-10/14/2019 -
+  
+  [Hello old friend! Decided it was time to revamp a few things and get a new GUI going!]
+  
+  Shape Tool updates
+    - Now supports multiple shapes at once
+    - Inputting and copying of shape point positions
+        [ x1,y1, x2,y2, ..., xn,yn ]
+           - For multi shapes -        [ [ x1,y1, x2,y2, ..., xn,yn ], [ x1,y1, x2,y2, ..., xn,yn ] ]
+  
+  Rounded edges on everything instead of angled corners
+  
+  Things are more grey now, instead of the dark green
+  
+  New Menu and GUI designs created, added soon
+    - New circular buttons with icons are in the works
+    - Carousel swiping menu choises instead of stacked buttons (Soon)
+    - Dynamically generated button icons, keeping graphic design down, easy icon updates
+    
+  Implimenting ThreeJS for GPU based filters, pixel processing, 3d transforms
+    - Will allow for much faster filters and brush tools
+    - The transform tool is currently 2d and buggy
+        making it a 3d plane will allow for easier editing of
+        translation, rotation, skew, scale, perspective
+    - Merging layers and stacked layer color mode effects will be easier to apply
 -->
 
 <script type="text/javascript">
