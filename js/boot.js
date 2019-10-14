@@ -294,7 +294,7 @@ $(document).on('keyup', function(e){
 		}
 		//Return
 		if(keyHit===13){
-			if(geoPos.length>2 && geoTool>=1){
+			if(geoPos.length>2 && geoTool>=1 && typingFocus==0){
 				geoDrawCloseGeo(1);
 			}else{
 				if(selectTool>0){
@@ -515,31 +515,41 @@ function checkMouse(e,dClick){
 	return false;
 }
 
-function setInputFocusActions(){ // To stop hotkeys while entering text
-	$("input").focusin(function(){
+function setInputFocusActions(curObj=null){ // To stop hotkeys while entering text
+	var setTextArea=true;
+	if(curObj==null){
+		curObj="input";
+	}else{
+		curObj="#"+curObj;
+		setTextArea=false;
+	}
+	
+	$(curObj).focusin(function(){
 		typingFocus=1;
 	});
-	$("input").focus(function(){ // Some Chrome doesn't work with focusin, even thought they say only firefox has an issue
+	$(curObj).focus(function(){ // Some Chrome doesn't work with focusin, even though they say only firefox has an issue
 		typingFocus=1;
 	});
-	$("input").focusout(function(){
+	$(curObj).focusout(function(){
 		typingFocus=0;
 	});
-	$("input").blur(function(){ // Same with focusout
+	$(curObj).blur(function(){ // Same with focusout
 		typingFocus=0;
 	});
-	$("textarea").focusin(function(){
-		typingFocus=1;
-	});
-	$("textarea").focus(function(){
-		typingFocus=1;
-	});
-	$("textarea").focusout(function(){
-		typingFocus=0;
-	});
-	$("textarea").blur(function(){
-		typingFocus=0;
-	});
+	if(setTextArea){
+		$("textarea").focusin(function(){
+			typingFocus=1;
+		});
+		$("textarea").focus(function(){
+			typingFocus=1;
+		});
+		$("textarea").focusout(function(){
+			typingFocus=0;
+		});
+		$("textarea").blur(function(){
+			typingFocus=0;
+		});
+	}
 }
 
 function updateThemeColor(themeColor){
