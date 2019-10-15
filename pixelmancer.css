@@ -318,6 +318,21 @@ h2 {
 	bottom:0;
 	pointer-events: all;
 }
+.uiButton_on{
+	margin-top:auto;
+	margin-bottom:auto;
+	height:256px;
+	width:256px;
+	background-image:url('ui/ringingCircle_on.png');
+}
+.uiButton_off{
+	margin-top:auto;
+	margin-bottom:auto;
+	height:256px;
+	width:256px;
+	background-image:url('ui/ringingCircle_off.png');
+}
+
 .header{
 	user-select:none;
 	-moz-user-select: none;

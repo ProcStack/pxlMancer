@@ -34,7 +34,7 @@ V1.5 - 10/9/2019-10/14/2019 -
 				
 			</td></tr>
 			<tr height="50%" align='right'><td>
-				<div onClick="animatedIcon('brush','iconDragCanvas');" style="margin-top:auto; margin-bottom:auto;height:256px;width:256px;overflow:hidden;background-image:url('ui/ringingCircle_on.png')"><canvas id="iconDragCanvas" height="256" width="256"></div>
+				<div active=false class="uiButton_off" id="uiIcon_brush" onClick="uiPrepButton('uiIcon_brush',uiIconScale);" ></div>
 <!--				<img src="ui/ringingCircle_on.png">
 				<br><img src="ui/ringingCircle_off.png"> -->
 			</td></tr>

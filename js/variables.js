@@ -87,6 +87,9 @@ var diaVal="";
 var onDia=0;
 
 var uiButtonName="ringingCircle";
+var uiBuildTime=300;
+var uiIconScale=.5;
+var uiIconDrawScale=.75;
 var setMenu=1;
 var divs=new Array("clear","drawOption","mirrorOption","filterOption","prefOptions");
 var skipMenuSlide='';

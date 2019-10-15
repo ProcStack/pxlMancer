@@ -336,9 +336,200 @@ function sampleCanvas(canvas,mPos){
 		return [-1,-1,-1,-1];
 	}
 }
+
+
+// animatedIcon('brush','iconDragCanvas',.5,0);
+var iconPositionsRaw=[ [ 147.45,226.42, 180,195.4, 214,175.67, 221.32,194.85, 219.29,206.65, 202.77,224.96, 175.12,240.57, 160.4,238.12, 153.20000000000002,231.29 ], [ 135.4,156.46, 90.29,99.26, 58.29,62.7, 47.160000000000004,41.88, 68.83,53.86, 100.13,87.73, 150.70000000000002,142.26, 162.59,143.70000000000002, 182.83,136.32, 192.70000000000002,132.71, 211.94,169.70000000000002, 175,192, 141,222.83, 118.13,204.13, 122.73,186.02, 132,174.73 ] ];
+//var iconPositionsRaw=[ [ 144.38,221.41, 180,195.4, 214,175.67000000000002, 221.32,194.85, 221.38,203.61, 199,223.62, 168.59,235.61, 156.79,232.81 ], [ 121.58,146.41, 113.19,132.37, 90.8,106.38, 63.93,76.71000000000001, 55.9,49.120000000000005, 54.9,29.32, 74.4,36.4, 96.59,47.62, 119.59,88.4, 131.59,108.02, 152.38,127.41, 167.18,121.41, 180.19,124.98, 200.61,132.61, 211,169.38, 174.59,189.38, 137.59,216.61, 108.4,190.02, 104.4,169.62, 107.5,156.07 ] ];
+iconPositionsRaw=[[ 147.45,226.42, 180,195.4, 214,175.67, 221.32,194.85, 219.29,206.65 ], [ 14.01,218.31, 135.12,60.550000000000004, 219.5,47.88, 173.91,71.24, 130.28,104.89, 79.04,145.36 ]];
+iconPositionsRaw=[[ 130.05,230.84, 136.92000000000002,153.15, 174.57,115.38, 157.58,138.81, 147.85,166, 135.61,202.25 ], [ 101.15,228.43, 111.51,150.26, 179.07,98.53, 139.27,140.72, 127.56,162.51, 110.63,190.92000000000002 ], [ 62.300000000000004,215, 104.15,130.75, 190.59,78.17, 154.63,104.48, 121.05,138.53, 92.02,169 ], [ 30.7,195.32, 135.12,60.550000000000004, 219.5,47.88, 173.91,71.23, 130.28,104.89, 79.04,145.36 ] ];
+//var iconPositions=[...iconPositionsRaw];
+function uiPrepButton(uiButton, scale){
+	var icon=document.getElementById(uiButton);
+	var active=icon.getAttribute('active')=="false"?!1:!0;
+	active=!active;
+	icon.setAttribute('active',active);
+	var resScale=256*scale;
+	icon.style.width=resScale;
+	icon.style.height=resScale;
+	icon.style.backgroundImage="url('ui/ringingCircle_"+(active?'on':'off')+".png')";
+	icon.style.backgroundSize=resScale+"px "+resScale+"px";
+	icon.innerHTML='';
+	var genCanvas=document.createElement('canvas');
+	genCanvas.width=resScale;//*uiIconDrawScale;
+	genCanvas.height=genCanvas.width;
+	var id=uiButton+"_canvas";
+	genCanvas.id=id;
+	icon.appendChild(genCanvas);
+	animatedIcon('brush',iconPositionsRaw,id,scale*uiIconDrawScale,0,active);
+}
+function animatedIcon(iconType,iconPositions,canvas,scale,gen,active){
+	var curIndex=0;
+	var tmpLoc=[];
+	if(typeof(canvas)=="string"){
+		canvas=[canvas];
+	}
+	if(typeof(gen) != "object" ){
+		var animLength=gen==0?uiBuildTime:gen;
+		var startTime=new Date().getTime();
+		var endTime=startTime+animLength;
+		gen=[0,animLength, startTime, endTime];// Perc, StartTime, EndTime
+		var res=document.getElementById(canvas[0]).width;
+		var iconPosScaled=[];
+		for(var c=0;c<iconPositions.length;++c){
+			iconPosScaled.push(iconPositions[c].slice(0))
+			for(var x=0;x<iconPositions[c].length;++x){
+				//console.log( ((iconPositions[c][x]-res*.5)*scale+res*.5)+" - "+scale+" - "+ (res*.5) +" -- "+iconPositions[c][x] );
+				//iconPosScaled[c][x]=iconPosScaled[c][x]*scale;// center scale -- (iconPosScaled[c][x]-res*.5)*scale+res*.5;
+				iconPosScaled[c][x]=(iconPosScaled[c][x]-256*.5)*scale+res*.5;
+			}
+		}
+		iconPositions=iconPosScaled;
+	}
+	
+	var color;
+	var width;
+	if(active){
+		color=[25,30,30];
+		width=4;
+	}else{
+		color=[130,150,150];
+		width=6;
+	}
+	
+	gen[0]=((new Date().getTime())-gen[2])/gen[1];
+	gen[0]=gen[0]>1?1:gen[0];
+	for(var c=0; c<canvas.length; ++c){
+		for(var x=0; x<iconPositions.length; ++x){
+			drawIcon(canvas[c], iconPositions[x], gen[0], color,1,4,1, (x==0?1:0) );
+		}
+	}
+	if(gen[0]<1){
+		setTimeout(function(){
+			animatedIcon(iconType,iconPositions,canvas,scale, gen, active);
+		}, 30);
+	}
+}
+function drawIcon(canvas,loc,completion,color,alpha,lineWidth,closePath, clearScreen){
+	var x=loc[0];
+	var y=loc[1];
+	var R=color[0];
+	var G=color[1];
+	var B=color[2];
+	hex=rgbToHex(Math.floor(R),Math.floor(G),Math.floor(B) );
+	var csW=$("#"+canvas).width();
+	var csH=$("#"+canvas).height();
+	
+	var comp=0;
+	/*if(comp==1 && 0){
+		var tempCanvas=document.createElement("canvas");
+		tempCanvas.width=csW;
+		tempCanvas.height=csH;
+		var draw=tempCanvas.getContext('2d');
+		var curCanvas=document.getElementById(canvas);
+		var canvasDraw=curCanvas.getContext("2d");
+	}else{
+		docCanvas=document.getElementById(canvas);
+		draw=docCanvas.getContext('2d');
+	}*/
+	docCanvas=document.getElementById(canvas);
+	draw=docCanvas.getContext('2d');
+	if(clearScreen==1){
+		draw.clearRect(0,0,docCanvas.width, docCanvas.height);
+	}
+	var runCount=loc.length*.5;
+	var endPointMin=runCount*completion;
+	var endPointMax=~~(endPointMin+1);
+	endPointPerc=completion<1 ? (endPointMin+1)-(endPointMax) : 1;
+	endPointMin=~~(endPointMin);
+
+	if(completion>0){
+		draw.globalAlpha=alpha;
+		draw.beginPath();
+		draw.lineWidth=Math.max(1,lineWidth);
+		if(lineWidth==0){
+			draw.fillStyle=hex;
+		}else{
+			draw.strokeStyle=hex;
+		}
+		if(loc.length>2){
+			if(closePath==1){
+				loc.push(loc[0],loc[1]);
+			}
+			
+			draw.lineJoin = 'round';
+			draw.moveTo(x,y);
+			if(endPointMin>1){
+				var fromToQuad=[loc[0],loc[1],loc[2],loc[3]];
+				for(var v=2; v<loc.length; v+=4){
+					var curPoint=~~(v*.5);
+					if((curPoint==endPointMin || curPoint+1==endPointMin) && completion<1){
+						/*draw.stroke();
+						draw.beginPath();
+						var fromToGrad=[loc[v],loc[v+1], loc[v+2],loc[v+3]];
+						var fromToLine=[loc[v],loc[v+1]];
+						if(curPoint+1==endPointMin){
+							fromToGrad=[loc[v],loc[v+1], loc[v+2],loc[v+3]];
+							fromToGrad=[loc[v+2],loc[v+3], loc[v+4],loc[v+5]];
+							fromToLine=[loc[v],loc[v+1]];
+							draw.moveTo(loc[v-2],loc[v-1]);
+							fromToLine=[loc[v+2],loc[v+3]];
+						}else if(curPoint==endPointMin){
+							fromToGrad=[loc[v-2],loc[v-1], loc[v+2],loc[v+3]];//loc[v],loc[v+1]];
+							fromToLine=[loc[v],loc[v+1]];//, loc[v+2],loc[v+3]];fromToLine
+							
+							draw.moveTo(loc[v],loc[v+1]);
+						}
+						var grad=draw.createLinearGradient(...fromToGrad);
+						grad.addColorStop(endPointPerc, 'rgba('+R+','+G+','+B+',1.0)');
+						grad.addColorStop(Math.min(1,endPointPerc+.2), 'rgba('+R+','+G+','+B+',0.0)');
+						draw.strokeStyle=grad;
+						//draw.quadraticCurveTo(...fromTo);
+						draw.lineTo(...fromToLine);
+						break;*/
+						
+						draw.stroke();
+						draw.beginPath();
+						var fromToGrad=[loc[v],loc[v+1], loc[v+2],loc[v+3]];
+						var fromToLine=[loc[v],loc[v+1]];
+						if(curPoint+1==endPointMin){
+							fromToGrad=[loc[v],loc[v+1], loc[v+2],loc[v+3]];
+							fromToLine=[loc[v+2],loc[v+3]];
+						}else if(curPoint==endPointMin){
+							fromToGrad=[loc[v-2],loc[v-1], loc[v+2],loc[v+3]];//loc[v],loc[v+1]];
+							fromToLine=[loc[v],loc[v+1]];//, loc[v+2],loc[v+3]];
+						}
+						draw.moveTo(loc[v-2],loc[v-1]);
+						var grad=draw.createLinearGradient(...fromToGrad);
+						grad.addColorStop(endPointPerc, 'rgba('+R+','+G+','+B+',1.0)');
+						grad.addColorStop(Math.min(1,endPointPerc+.2), 'rgba('+R+','+G+','+B+',0.0)');
+						draw.strokeStyle=grad;
+						//draw.quadraticCurveTo(...fromTo);
+						draw.lineTo(...fromToLine);
+						break;
+					}else{
+						fromToQuad=[loc[v],loc[v+1], loc[v+2],loc[v+3]];
+						draw.quadraticCurveTo(...fromToQuad);
+					}
+				}
+			}
+			if(closePath==1 && lineWidth!=0 && completion>=1){
+				draw.closePath();
+			}
+		}
+		if(lineWidth==0){
+			draw.fill();
+		}else{
+			draw.stroke();
+		}
+	}
+}
+
+
+/*
 function animatedIcon(iconType,canvas, gen=0){
 	if(typeof(gen) != "object" ){
-		var animLength=gen==0?500:gen;
+		var animLength=gen==0?1000:gen;
 		var startTime=new Date().getTime();
 		var endTime=startTime+animLength;
 		gen=[0,animLength, startTime, endTime];// Perc, StartTime, EndTime
@@ -350,12 +541,14 @@ function animatedIcon(iconType,canvas, gen=0){
 
 	var curIndex=0;
 	var tmpLoc=[];
+	var pass=true;
 	for(var x=0; x<tmpIconPositions.length; ++x){
-		drawIcon(canvas, tmpIconPositions[x], gen[0], [200,200,200],1,4,1);
-		
+		pass=drawIcon(canvas, tmpIconPositions[x], gen[0], [200,200,200],1,4,1);
+		if(!pass){
+			break;
+		}
 	}
-
-	if(gen[2]<1){
+	if(gen[0]<1 && pass){
 		setTimeout(function(){
 			animatedIcon(iconType,canvas, gen);
 		}, 30);
@@ -372,7 +565,7 @@ function drawIcon(canvas,loc,completion,color,alpha,lineWidth,closePath){
 	var csH=$("#"+canvas).height();
 	
 	var comp=0;
-	if(comp==1 && 0){
+	/if(comp==1 && 0){
 		var tempCanvas=document.createElement("canvas");
 		tempCanvas.width=csW;
 		tempCanvas.height=csH;
@@ -382,10 +575,14 @@ function drawIcon(canvas,loc,completion,color,alpha,lineWidth,closePath){
 	}else{
 		docCanvas=document.getElementById(canvas);
 		draw=docCanvas.getContext('2d');
-	}
+	}/
+	docCanvas=document.getElementById(canvas);
+	draw=docCanvas.getContext('2d');	
+	draw.clearRect(0,0,docCanvas.width, docCanvas.height);
 	var runCount=loc.length*.5;
 	var endPointMin=runCount*completion;
-	var endPointMax=~~(endPointMin+1);
+	var endPointMax=Math.min( ~~(endPointMin+1), runCount);
+	endPointPerc=completion<1 ? (endPointMin+1)-(endPointMax) : 1;
 	endPointPerc=(endPointMin+1)-(endPointMax);
 	endPointMin=~~(endPointMin);
 
@@ -393,36 +590,68 @@ function drawIcon(canvas,loc,completion,color,alpha,lineWidth,closePath){
 	console.log(endPointMin);
 	console.log(endPointMax);
 	console.log(endPointPerc);
-
-	draw.globalAlpha=alpha;
-	draw.beginPath();
-	draw.lineWidth=Math.max(1,lineWidth);
-	if(lineWidth==0){
-		draw.fillStyle=hex;
-	}else{
-		draw.strokeStyle=hex;
-	}
-	if(loc.length>2){
-		draw.lineJoin = 'round';
-		draw.moveTo(x,y);
-		for(var v=2; v<loc.length; v+=4){
-			var curPoint=~~(v*.5);
-			draw.quadraticCurveTo(loc[v],loc[v+1], loc[v+2],loc[v+3]);
+	if(completion>0){
+		draw.globalAlpha=alpha;
+		draw.beginPath();
+		draw.lineWidth=Math.max(1,lineWidth);
+		if(lineWidth==0){
+			draw.fillStyle=hex;
+		}else{
+			draw.strokeStyle=hex;
 		}
-		if(closePath==1){
-			draw.quadraticCurveTo(loc[loc.length-2],loc[loc.length-1], loc[0],loc[1]);
+		if(loc.length>2){
+			if(closePath==1){
+				loc.push(loc[0],loc[1]);
+			}
+			
+			draw.lineJoin = 'round';
+			draw.moveTo(x,y);
+			for(var v=2; v<loc.length; v+=4){
+				var curPoint=~~(v*.5);
+				if((curPoint==endPointMin || curPoint+1==endPointMin) && completion<1){
+					draw.stroke();
+					draw.beginPath();
+					var fromToGrad=[loc[v],loc[v+1], loc[v+2],loc[v+3]];
+					var fromToLine=[loc[v],loc[v+1]];
+					var ret=true;
+					if(endPointMin==0){
+					var fromToGrad=[loc[v-2],loc[v-1], loc[v],loc[v+1]];
+						fromToLine=[loc[v],loc[v+1]];
+					}else{
+						if(curPoint+1==endPointMin){
+							fromToGrad=[loc[v],loc[v+1], loc[v+2],loc[v+3]];
+							fromToLine=[loc[v+2],loc[v+3]];
+						}else if(curPoint==endPointMin){
+							fromToGrad=[loc[v-2],loc[v-2], loc[v+2],loc[v+3]];//loc[v],loc[v+1]];
+							fromToLine=[loc[v],loc[v+1]];//, loc[v+2],loc[v+3]];
+							//ret=false;
+						}
+						draw.moveTo(loc[Math.max(0,v-2)],loc[Math.max(1,v-1)]);
+						//draw.quadraticCurveTo(...fromTo);
+					}
+					var grad=draw.createLinearGradient(...fromToGrad);
+					grad.addColorStop(endPointPerc, 'rgba('+R+','+G+','+B+',1.0)');
+					grad.addColorStop(Math.min(1,endPointPerc+.01), 'rgba('+R+','+G+','+B+',0.0)');
+					draw.strokeStyle=grad;
+					draw.lineTo(...fromToLine);
+					return ret;
+				}else{
+					draw.quadraticCurveTo(loc[v],loc[v+1], loc[v+2],loc[v+3]);
+				}
+			}
+			if(closePath==1 && lineWidth!=0 && completion>=1){
+				draw.closePath();
+			}
 		}
-		if(closePath==1 && lineWidth!=0){
-			draw.closePath();
+		if(lineWidth==0){
+			draw.fill();
+		}else{
+			draw.stroke();
 		}
 	}
-	if(lineWidth==0){
-		draw.fill();
-	}else{
-		draw.stroke();
-	}
+	return true;
 }
-
+*/
 
 
 function drawGeo(loc,eCount,size,color,alpha,filled,flip,canvas,comp){
