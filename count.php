@@ -3,7 +3,8 @@ $sa_count=24632;
 $sa_lineCount=14017;
 if(isset($_GET['getLineCount']) || isset($_GET['count'])){
 	// Get and update user count.
-	if(isset($_GET['count'])){
+	
+	if(isset($_GET['count']) && $_SERVER['HTTP_HOST']!='localhost'){
 		//Update count.php line count in file
 		$sa_count++;
 		$countFile=file('count.php');

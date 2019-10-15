@@ -245,6 +245,22 @@ $(document).on('keypress', function(e){
 				}
 				return false;
 			}
+			// Ctrl
+			if(keyHit==17){
+				modKey_ctrl=true;
+			}
+			// Alt
+			if(keyHit==18){
+				modKey_alt=true;
+			}
+			// Shift
+			if(keyHit==16){
+				modKey_shift=true;
+			}
+			// Tab
+			if(keyHit==9){
+				modKey_tab=true;
+			}
 		}
 		// A
 		/*if(keyHit===97){
@@ -397,6 +413,24 @@ $(document).on('keyup', function(e){
 			reinitializeSettings(1);
 			return false;
 		}
+		
+		// Ctrl
+		if(keyHit==17){
+			modKey_ctrl=false;
+		}
+		// Alt
+		if(keyHit==18){
+			modKey_alt=false;
+		}
+		// Shift
+		if(keyHit==16){
+			modKey_shift=false;
+		}
+		// Tab
+		if(keyHit==9){
+			modKey_tab=false;
+		}
+		
 	}else{
 		if(dialogueOpen==1 && openDialogue!='contactMe' && active==1){
 			// Release Enter - Confirm window dialog
@@ -453,7 +487,7 @@ function checkMouse(e,dClick){
 	if(printKey==1){
 		$("#alertFeed2").html(button);
 	}
-	if(button == 1){
+	if(button == 1 && !modKey_ctrl){
 		dragClick=dClick;
 		
 		//if(geoTool==1 && geoToolStopDraw==2){
@@ -464,7 +498,7 @@ function checkMouse(e,dClick){
 			geoToolStopDraw=1;
 		}*/
 	}
-	if(button == 2){
+	if(button == 2 || (button == 1 && modKey_ctrl) ){
 		if(geoTool>=1){
 			geoToolStopDraw=3;
 		}

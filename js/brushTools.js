@@ -797,7 +797,8 @@ function geoDrawEditVertex(gen, sel, pos, seg=geoToolSegment){
 		$("#geoDrawGuides").append(html);
 		$("#"+name).css({ "left":geoPos[geoPos.length-2]-size/2,"top":geoPos[geoPos.length-1]-size/2 });
 		$("#"+name).attr({ "mX":geoPos[geoPos.length-2]-size/2,"mY":geoPos[geoPos.length-1]-size/2, "origX":geoPos[geoPos.length-2]-size/2,"origY":geoPos[geoPos.length-1]-size/2 });
-		$("#"+name).attr('onclick',  "if(geoTool>=2){cmdDoubleClick('"+name+"',15,\"geoDrawSplitPoint('"+name+"');\",0);}");
+		$("#"+name).attr('onclick',  "if(geoTool>=2){cmdDoubleClick('"+name+"',20,\"geoDrawSplitPoint('"+name+"');\",0);}");
+		
 		
 		$('#geoDraw_val').val($("#geoDrawGuides").find('.vert').length);
 		
@@ -1057,7 +1058,7 @@ function geoDrawRedrawHandles(){
 			$("#geoDrawGuides").append(html);
 			$("#"+name).css({ "left":geoPos[x*2]-half,"top":geoPos[x*2+1]-half });
 			$("#"+name).attr({ "mX":geoPos[x*2]-half,"mY":geoPos[x*2+1]-half, "origX":geoPos[x*2]-half,"origY":geoPos[x*2+1]-half });
-			$("#"+name).attr('onclick',  "if(geoTool>=2){cmdDoubleClick('"+name+"',15,\"geoDrawSplitPoint('"+name+"');\",0);}");
+			$("#"+name).attr('onclick',  "if(geoTool>=2){cmdDoubleClick('"+name+"',20,\"geoDrawSplitPoint('"+name+"');\",0);}");
 			
 			$('#geoDraw_val').val(x+1); // Is this why it needs to start from 1 not 0????
 			

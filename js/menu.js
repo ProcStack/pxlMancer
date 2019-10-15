@@ -94,7 +94,12 @@ function gradientInit(patternGen,boot){
 	gBG.setAttribute("height", 1);
 	gBG.setAttribute("width", sW);
 	gBG.setAttribute("height", sH);
+	
+	var pre=new Date().getTime();
 	gradientRunner("gradientBG",patternGen,gradFromHex,gradToHex,((mobile+1)%2),1,boot);
+	var post=new Date().getTime();
+	var delta=post-pre;
+	console.log("Background Gen Time -- "+delta);
 }
 function tempBgInit(){
 	gBG=document.getElementById("tempBG");

@@ -336,6 +336,94 @@ function sampleCanvas(canvas,mPos){
 		return [-1,-1,-1,-1];
 	}
 }
+function animatedIcon(iconType,canvas, gen=0){
+	if(typeof(gen) != "object" ){
+		var animLength=gen==0?500:gen;
+		var startTime=new Date().getTime();
+		var endTime=startTime+animLength;
+		gen=[0,animLength, startTime, endTime];// Perc, StartTime, EndTime
+	}
+	gen[0]=((new Date().getTime())-gen[2])/gen[1];
+	gen[0]=gen[0]>1?1:gen[0];
+	
+	var tmpIconPositions=[ [ 135.4,156.46, 90.29,99.26, 58.29,62.7, 47.160000000000004,41.88, 68.83,53.86, 100.13,87.73, 150.70000000000002,142.26, 162.59,143.70000000000002, 182.83,136.32, 192.70000000000002,132.71, 211.94,169.70000000000002, 175,192, 141,222.83, 118.13,204.13, 122.73,186.02, 132,174.73 ] ];
+
+	var curIndex=0;
+	var tmpLoc=[];
+	for(var x=0; x<tmpIconPositions.length; ++x){
+		drawIcon(canvas, tmpIconPositions[x], gen[0], [200,200,200],1,4,1);
+		
+	}
+
+	if(gen[2]<1){
+		setTimeout(function(){
+			animatedIcon(iconType,canvas, gen);
+		}, 30);
+	}
+}
+function drawIcon(canvas,loc,completion,color,alpha,lineWidth,closePath){
+	var x=loc[0];
+	var y=loc[1];
+	var R=color[0];
+	var G=color[1];
+	var B=color[2];
+	hex=rgbToHex(Math.floor(R),Math.floor(G),Math.floor(B) );
+	var csW=$("#"+canvas).width();
+	var csH=$("#"+canvas).height();
+	
+	var comp=0;
+	if(comp==1 && 0){
+		var tempCanvas=document.createElement("canvas");
+		tempCanvas.width=csW;
+		tempCanvas.height=csH;
+		var draw=tempCanvas.getContext('2d');
+		var curCanvas=document.getElementById(canvas);
+		var canvasDraw=curCanvas.getContext("2d");
+	}else{
+		docCanvas=document.getElementById(canvas);
+		draw=docCanvas.getContext('2d');
+	}
+	var runCount=loc.length*.5;
+	var endPointMin=runCount*completion;
+	var endPointMax=~~(endPointMin+1);
+	endPointPerc=(endPointMin+1)-(endPointMax);
+	endPointMin=~~(endPointMin);
+
+	console.log("---- DRAW ---");
+	console.log(endPointMin);
+	console.log(endPointMax);
+	console.log(endPointPerc);
+
+	draw.globalAlpha=alpha;
+	draw.beginPath();
+	draw.lineWidth=Math.max(1,lineWidth);
+	if(lineWidth==0){
+		draw.fillStyle=hex;
+	}else{
+		draw.strokeStyle=hex;
+	}
+	if(loc.length>2){
+		draw.lineJoin = 'round';
+		draw.moveTo(x,y);
+		for(var v=2; v<loc.length; v+=4){
+			var curPoint=~~(v*.5);
+			draw.quadraticCurveTo(loc[v],loc[v+1], loc[v+2],loc[v+3]);
+		}
+		if(closePath==1){
+			draw.quadraticCurveTo(loc[loc.length-2],loc[loc.length-1], loc[0],loc[1]);
+		}
+		if(closePath==1 && lineWidth!=0){
+			draw.closePath();
+		}
+	}
+	if(lineWidth==0){
+		draw.fill();
+	}else{
+		draw.stroke();
+	}
+}
+
+
 
 function drawGeo(loc,eCount,size,color,alpha,filled,flip,canvas,comp){
 	var x=loc[0];

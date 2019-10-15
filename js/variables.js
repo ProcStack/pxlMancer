@@ -1,3 +1,8 @@
+// I was always told to not rely on global variables
+// ...
+// HAHAHHAHA ... oh man... I should really reorganize and cull down
+// REAP THE WASTE!
+
 var bgcolor="#051525";
 var imbix = null;
 var curCommand = null;
@@ -11,6 +16,10 @@ var dragClick=0;
 var dragging=0;
 var doubleClick=0;
 var mButton=0;
+var modKey_ctrl=false;
+var modKey_alt=false;
+var modKey_shift=false;
+var modKey_tab=false;
 var slDown=0;
 var imbixOver=0;
 var imbixPosX=0;
@@ -76,6 +85,8 @@ var scroller=0;
 var dialogueOpen=0;
 var diaVal="";
 var onDia=0;
+
+var uiButtonName="ringingCircle";
 var setMenu=1;
 var divs=new Array("clear","drawOption","mirrorOption","filterOption","prefOptions");
 var skipMenuSlide='';
