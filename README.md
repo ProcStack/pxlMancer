@@ -1,5 +1,5 @@
-# pxlMancer
-### Source for - [pxlMancer.com](www.pxlMancer.com)
+# pxlmancer
+### Source for - [pxlmancer.com](www.pxlmancer.com)
 ### An online graphics editor created by Kevin Edzenga
 #### For the dedicated or to fill boredom. Make something cool or toy around, its up to you!
 
@@ -15,7 +15,7 @@
 ![GUI](show/ver1.4_Gui.jpg)
 ---
 
-<br>***For an* animated gif *rundown of what* pxlMancer *is all about-***
+<br>***For an* animated gif *rundown of what* pxlmancer *is all about-***
 <br>&nbsp;&nbsp;&nbsp;&nbsp; *Check out* [https://imgur.com/gallery/8lSW1](https://imgur.com/gallery/8lSW1) *( got wifi ?! )*
 
 ---
@@ -25,7 +25,7 @@
 ---
 
 ### Techy Stuff; Javascript Features
-- pxlMancer.com is setup as a progressive web app, savable to home screen with &SSL Encryption* ( HTTPS )
+- pxlmancer.com is setup as a progressive web app, savable to home screen with &SSL Encryption* ( HTTPS )
   <br>*( Javascript Worker script example )*
 - CPU based pixel processing *( Switching to GPU based shortly )*
   - Bluring
@@ -46,9 +46,9 @@
   
 ---
 
-***For snapshots of in-progress* dev projects *on* pxlMancer,***
+***For snapshots of in-progress* dev projects *on* pxlmancer,***
 <br>&nbsp;&nbsp;&nbsp;&nbsp; ***Along with* gif animations *of functions,***
-<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ***Check out* `pxlMancer/show`**
+<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ***Check out* `pxlmancer/show`**
 
 ---
 
