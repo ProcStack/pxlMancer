@@ -46,6 +46,7 @@ function setBackgroundMode(mode){
 }
 
 function setActive(){
+	active=1;
 	if(dispStats==1){
 		$("#dragCount").html(dragCount);
 	}
@@ -57,7 +58,7 @@ function setActive(){
 		toggleSlideMenu(1);
 	}
 	$("#layersWindow").css({'visibility':'visible','zIndex':5000});
-	active=1;
+	
 	var canvas=document.getElementById("undoDraw");
 	canvas.setAttribute("width", sW);
 	canvas.setAttribute("height", sH);
@@ -114,6 +115,7 @@ function getMouseXY(e) {
 	//	$("#alertFeed1").html(compMethod);
 	//	$("#alertFeed2").html(brushStyle);
 	//}
+console.log("But why?");
 	if(howToActive==0){
 	//if(touchCheck==0){
 		if(e!=0){
@@ -128,7 +130,13 @@ function getMouseXY(e) {
 			zoomMouseX=mouseX;
 			zoomMouseY=mouseY;
 		}
-
+		/*if(active==0){
+			if(dragClick==1 && dragging==0){
+				active=1;
+			}
+			return;
+		}*/
+console.log("MOUSE BE RUNNIN AGAIN!");
 		if(mobile==0){
 			if(skipMenuSlide==''){
 				focusBlurMarquee('marqSelect',1);
