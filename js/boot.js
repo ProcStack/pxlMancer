@@ -68,6 +68,8 @@ function docOnMouseDown(e){
 			selectToolDeselect=1;
 			
 		}
+	}else{
+		//active=1;
 	}
 }
 /*function docOnMouseDown(){
@@ -107,6 +109,7 @@ function runInitScripts(){ // Run initializing scripts
 	sH=window.innerHeight;
 	origSW=sW;
 	origSH=sH;
+	mapResPerc=1;
 	mouseX = sW/2;
 	mouseY = sH*.25;
 	setTimeout(function(){ // Get loader up
@@ -124,7 +127,6 @@ function runInitScripts(){ // Run initializing scripts
 				mapH=window.innerHeight*mapResPerc;
 				mapCanvas.height=window.innerHeight;
 				mapBootEngine();
-				mapRender(runner);
 
 				bootStep(1,"Building Backgrounds..");
 				setTimeout(function(){ // Also, let that loader load
@@ -170,6 +172,7 @@ function runInitScripts(){ // Run initializing scripts
 												var imbixStart=initImbix();
 												imbixClick=1;
 												active=0;
+												
 												cutLoader();
 												maximizeImbix();
 											},20);
@@ -644,6 +647,8 @@ function reinitializeSettings(prompt){
 	storeKeyHold=0;
 	colorSphereRun=0;
 	currentOnly=0;
+	
+	mirror=3;
 	toCenter=1;
 	dragUpdate = 1;
 	maxMag = 0;
@@ -711,6 +716,12 @@ function reinitializeSettings(prompt){
 	setSlideControl('slDia_brushBlur','');
 	$('#slDia_extend_val').val(.04);
 	setSlideControl('slDia_extend','');
+	
+	
+	$("#cs_random_val").val( 0 );
+	setSlideControl('cs_random','');
+	$('#cs_red_val').val('-3');
+	setSlideControl('cs_red','');
 
 	eval($("#barMenu_setWidth").attr('onclick'));
 	eval($("#barMenu_setWidth").attr('onmouseup'));
@@ -844,6 +855,129 @@ function runNewDocumentPrompt(checkPrompt,run,rand,drawPosPrompt,messPosPrompt){
 		menuVis(1,1);
 	}
 }
+
+
+
+function imbyScreenDraw(run,rand,messPosPrompt){
+	if(active==0){
+		run[0]+=1;
+		run[1]+=1;
+		rand[0]=rand[0]+1;
+		if(run[0]==0 && run[1]==0){
+			var ms=(new Date().getMilliseconds());
+			ms+="";
+			run[0]=parseInt(ms.substr( ms.length-5 ));
+			run[1]=run[0]*3.76;
+			run[2]=((run[0]*1.47+run[1])%100)*.0001+.001;
+			run[3]=1;
+			run[4]=-1;
+			var dPos=[(160+Math.sin(run[0]/30+353)*110),(70+Math.cos(run[1]/30+423)*50)];
+			drawPosPrompt=[dPos[0],dPos[1], dPos[0],dPos[1], dPos[0],dPos[1]];
+			trailPos=[dPos[0],dPos[1], dPos[0],dPos[1], dPos[0],dPos[1]];
+			messPosPrompt=[sW*.5,sH*.8, sW*.5,sH*.8, sW*.5,sH*.8,];
+			$("#sl"+diaVal+"_setWidth_val").val('2');
+			setSlideControl("sl_setWidth",'');
+			setSlideControl("slDia_setWidth",'');
+			mirror=3;
+			brushDraw=2;
+			trail=1;
+			toCenter=1;
+			$('#cs_red_val').val('-3');
+			dragCount=0;
+			dynMag=1;
+		}else{
+			trailPos=[...messPosPrompt];
+			for(var x=4; x>1;x-=2){
+				messPosPrompt[x]=messPosPrompt[x-2];
+				messPosPrompt[x+1]=messPosPrompt[x-1];
+				//messPosPrompt[x]=(messPosPrompt[x]*2+messPosPrompt[x-2])*.3333;
+				//messPosPrompt[x+1]=(messPosPrompt[x+1]*2+messPosPrompt[x-1])*.3333;
+			}
+			
+			let mMult=mirror==0?1.5:1.1;
+			var xMult=mirror==2 ? -1.6 : ( run[3]>.5 ? Math.sin(run[0]*.01+run[1]*.033) : Math.cos(run[0]*.1-run[1]*.013) ) * mMult;
+			var yMult=mirror==1 ? .2 : Math.sin(run[0]*.01+run[1]*.033) * mMult;
+			//yMult*=run[3];
+			
+			var mult=Math.min(1,Math.abs(Math.sin(run[0]/40+rand[1]+run[1]*run[2]))*1.4)*.5+.5;
+			var math=(sW*.5-sW*.2*mult*xMult)+Math.sin(run[0]*.0371+rand[1]+(run[1]/30%5)+Math.sin(run[0]/20+rand[1]*.27+((run[1]*.13)%5))+messPosPrompt[0]/60+5453)*(sW*.1-sW*.5*(1-Math.abs(mult)));
+			math=(messPosPrompt[0]*3+math)/4;
+			messPosPrompt[0]=messPosPrompt[0]*.01+(math);
+			math=(sH*.5-sH*.2*mult*yMult)+Math.cos(run[1]/13+rand[1]+(run[0]/30%5)+Math.cos(run[1]/30+rand[1]-4564+(run[0]/50%5))+messPosPrompt[1]/30+443)*(sH*.1-sH*.4*(1-Math.abs(mult)));
+			math=(messPosPrompt[1]*3+math)/4;
+			messPosPrompt[1]=messPosPrompt[1]*.01+(math);
+			/////
+			dragPos=messPosPrompt;
+			zoomMouseX=dragPos[0];
+			zoomMouseY=dragPos[1];
+			
+			refreshWindow[0]=Math.min(refreshWindow[0],zoomMouseX);
+			refreshWindow[1]=Math.min(refreshWindow[1],zoomMouseY);
+			refreshWindow[2]=Math.max(refreshWindow[2],zoomMouseX);
+			refreshWindow[3]=Math.max(refreshWindow[3],zoomMouseY);
+			
+			dragCount++;
+			if($("#lwin_l1_draw").length){
+				if(rand[0]%rand[1]==0){
+					clearScreen('lwin_l1_draw');
+					//dragCount=0;
+					
+					mirror=(new Date().getMilliseconds());
+					mirror+="";
+					run[0]=parseInt(mirror.substr( mirror.length-5 ));
+					run[0]=parseInt(run[0]*Math.sin(run[0]*.01));
+					run[1]=run[0]+run[0]*1.73;
+					//run[2]=Math.sin((run[0]*1.47+run[1])%100)*.05+.1;
+					run[3]=Math.sin(run[1])*.5+.5;
+					run[4]=parseInt(run[1]%8)-7; // Dashed lines
+					run[4]=run[4]<-1?-1:0;
+					run[0]+=dragCount;
+					toCenter=parseInt(run[0]%10)-4;
+					toCenter=toCenter<1?1:toCenter;
+					
+					rand[0]=0;
+					rand[1]=Math.floor(Math.random(rand[1]+run[0])*75+80);
+					$("#cs_random_val").val( run[0]%25 );
+					
+					let randColor=-(run[0]%3 +1) +"";
+					mirror=parseInt( run[0] )%6;
+					if(mirror==2 || mirror==0){
+						mirror=mirror==2 ? 4 : 3;
+						run[3]=-1;
+					}
+					if(mirror==5){
+						mirror=3;
+						rand[1]-=20;
+					}
+					$('#cs_red_val').val(  randColor );
+					//filter=3;
+					//spray=Math.max(0, (run[0]%10)-6);
+					//messPosPrompt=[...messPosPrompt.slice(0,2)];
+					//brushDraw=(run[0]%4);
+					
+					
+					messPosPrompt[2]=messPosPrompt[0];
+					messPosPrompt[3]=messPosPrompt[1];
+					messPosPrompt[4]=messPosPrompt[0];
+					messPosPrompt[5]=messPosPrompt[1];
+					
+					refreshWindow[0]=sW;
+					refreshWindow[1]=sH;
+					refreshWindow[2]=0;
+					refreshWindow[3]=0;
+				}
+				let perc=rand[0]/rand[1];
+				if( perc < .96 && perc > .03){
+					doTouch("lwin_l1_draw",curCanvas,run[4],-1,0);
+				}
+			}
+		}
+		setTimeout(function(){
+			imbyScreenDraw(run,rand,messPosPrompt);
+		},20);
+	}
+}
+
 
 function prepQualitySettings(){
 

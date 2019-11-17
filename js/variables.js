@@ -33,6 +33,12 @@ var sH=window.innerHeight;// * ratio;
 var origSW=sW;
 var origSH=sH;
 var machineBenchmark=1;
+var clockStart=0;
+var clockPrev=0;
+var clockCur=0;
+var clockStartDelta=0;
+var clockDelta=0;
+var drawGrid=0;
 
 
 var mouseX = sW/2;
@@ -89,6 +95,7 @@ var scroller=0;
 var dialogueOpen=0;
 var diaVal="";
 var onDia=0;
+var mapPause=0;
 
 var uiButtonName="ringingCircle";
 var uiBuildTime=300;

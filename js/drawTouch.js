@@ -37,7 +37,7 @@ function doTouch(strokeCanvas,drawCanvas,pastCanvas,undoCanvas,sendToPast) {
 			cW=sW;
 			cH=sH;
 		}
-		if(toCenter != $("#sl"+diaVal+"_count_val").val() && trail >= 2){
+		if(toCenter != $("#sl"+diaVal+"_count_val").val() && trail >= 2){ // ##
 			toCenter=$("#sl"+diaVal+"_count_val").val();
 			trailOptions();
 		}
@@ -859,9 +859,6 @@ function doTouch(strokeCanvas,drawCanvas,pastCanvas,undoCanvas,sendToPast) {
 				}
 				if(filter==2){
 					eatAway(draw,draw);
-				}
-				if(filter==3){
-					HueAttack(draw,draw);
 				}
 				if(filter==3){
 					HueAttack(draw,draw);

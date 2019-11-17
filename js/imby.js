@@ -1,40 +1,44 @@
 //////// Desktop Movements
-function imbixBotMove() {
+function imbixBotMove(gen=[mouseX,mouseY,0]) {
 	imbixTimer+=1;
 	if(active<=0){
-		percW=Math.abs(((mouseX)/sW)-.5)*2;
-		percH=Math.abs(mouseY-sH*.25)/(sH*.75);
-		totalPercBase=Math.max(percW,percH)*.5;
-		totalPerc=totalPercBase*.7;//totalPercBase;
+		gen[0]=(gen[0]*2+(sW-mouseX))*.25;
+		gen[1]=(gen[1]*2+(sH-mouseY))*.25;
+		
+		totalPercBase=(((gen[0]-sW*.5)**2 + (gen[1]-sH*.25)**2)**.5) / ((sW+sH)*.5);
+		totalPercBase=totalPercBase<1?1-totalPercBase:0;
+		totalPerc=totalPercBase*.5;//totalPercBase;
+		gen[2]=(gen[2]+totalPerc)*.25;
+		totalPerc=gen[2]+0;
 
-		startX=sW*.5;
-		startY=sH*.25;
-		noiseX=(Math.sin(imbixTimer/100+456)+Math.sin(imbixTimer/70+342)+Math.sin(imbixTimer/200+658))*(20-15*totalPerc);
-		noiseY=(Math.cos(imbixTimer/90+10)+Math.cos(imbixTimer/130+212)+Math.cos(imbixTimer/300+84))*(20-15*totalPerc);
+		noiseX=(Math.sin(imbixTimer/80+456)+Math.cos(imbixTimer/50+342)+Math.sin(imbixTimer/20+658))*(15);
+		noiseY=(Math.cos(imbixTimer/90+10)+Math.sin(imbixTimer/30+212)+Math.cos(imbixTimer/30+84))*(15-10*totalPerc);
 		
 		if(touchCheck==0){
-			xAnim=((startX*(1-totalPerc))+(mouseX*(totalPerc)))+noiseX;
-			yAnim=((startY*(1-totalPerc))+(mouseY*(totalPerc)))+noiseY;
+			xAnim=( (gen[0]-sW*.5) *(totalPerc))+noiseX;
+			yAnim=( (gen[1]-(sH*.15)) *(totalPerc))+noiseY;
 		}else{
-			xAnim=startX+noiseX;
-			yAnim=startY+noiseY;
+			xAnim=noiseX;
+			yAnim=noiseY;
 		}
-		outX=xAnim+offX;
-		outY=yAnim+offY;
-		imbix.style.left=outX;
-		imbix.style.top=outY;
+		outX=-(xAnim)*.01;
+		outY=(yAnim)*.003-14.7;
+		var outZ=(1-xAnim)*.0015;
 		
-		posArray=imbixNetGen();
+		//geoList['imby'][0].position.x=outX;//-25.6;
+		geoList['imby'][0].position.y=outY;
+		geoList['imby'][0].position.z=outZ;
+		//geoList['imbyGlowMask'][0].position.x=outX;//-25.6;
+		geoList['imbyGlowMask'][0].position.y=outY;
+		geoList['imbyGlowMask'][0].position.z=outZ;
 		
-		if(mobile==0){
-			imbixFieldMove(posArray);
-		}
-		if(!paused){
-			setTimeout(imbixBotMove,50);
-		}
+		//geoList['imby'][0].position.
+		
+		setTimeout(
+			function(e){
+				imbixBotMove(gen);
+			},50);
 	}else{
-		document.removeEventListener("focus", imbyFocus);
-		document.removeEventListener("blur", imbyBlur);
 		clearScreen(curCanvas);
 	}
 }
@@ -47,110 +51,6 @@ function imbyBlur(){
 	paused=true;
 }
 
-function imbixNetGen(){
-		var xDiff=200;
-		var yDiff=30;
-		var yAdd=.3;
-		var noiseMult=10;
-		var noiseSpeed=.04;
-		var noiseOffset=imbixTimer*noiseSpeed;
-		var noiseYMult;
-		var x,y,xPos,yPos,xTo,yTo,xNoise,yNoise,lineMult;
-		var lineCount=[1,2,3,4,5,6,5,2];
-		var gridColor=[120,200,160];
-		var pointColor=[140,225,200];
-		clearScreen(curCanvas);
-		var pId=-1;
-		var pPos=[];
-		var pScale=[];
-		var rowMult=[];
-		var connectArray={
-			0 : [1,2],
-			1 : [3,4],
-			2 : [4,5],
-			3 : [6,7],
-			4 : [7,8],
-			5 : [8,9],
-			6 : [10,11],
-			7 : [11,12],
-			8 : [12,13],
-			9 : [13,14],
-			10 : [15,16],
-			11 : [16,17],
-			12 : [17,18],
-			13 : [18,19],
-			14 : [19,20],
-			15 : [21],
-			16 : [21,22],
-			17 : [22,23],
-			18 : [23,24],
-			19 : [24,25],
-			20 : [25],
-			21 : [22],
-			22 : [26],
-			23 : [26,27],
-			24 : [27,25],
-			25 : [],
-			26 : [27]
-			};
-		
-		for(y=0; y<lineCount.length;++y){
-			for(x=0; x<lineCount[y];++x){
-				pId+=1;
-				rowMult.push(y);
-				xPos=(x/lineCount[y])*(xDiff*lineCount[y]) + (sW-xDiff*(lineCount[y]-1))/2;
-				yPos=y*yDiff + (sH-(lineCount.length+2)*yDiff)/2 + yAdd*y*y*y + sH/5;
-				noiseYMult=(y+3)/(lineCount.length+3);
-				xNoise=Math.sin(noiseOffset + x*31 + y*42 + pId + Math.cos( noiseOffset*1.5 - x*14 + y*51 - pId)*Math.cos(-noiseOffset*.8+x*56+y*26+pId)*3) * noiseMult*noiseYMult;
-				yNoise=Math.cos(-noiseOffset + x*20 + y*32 - pId + Math.sin( -noiseOffset*.9 - x*45 + y*22 + pId)*Math.sin(noiseOffset*1.2+x*25+y*62+pId)*3) * noiseMult*1.5*noiseYMult;
-				xPos+=xNoise;
-				yPos+=yNoise;
-				
-				if(y == 0){
-					yPos+=15;
-				}else if(y == 1){
-					yPos+=5;
-				}else if(y==6 || y==7){
-					if(lineCount[y]>2){
-						if(x == 0 || x == lineCount[y]-1){
-							yPos-=10;
-						}
-						if(x == 1 || x == lineCount[y]-2){
-							yPos+=10;
-						}
-					}else{
-						yPos-=5;
-					}
-				}else if(y==5){
-					if(x==2){
-						xPos-=5;
-					}else if(x==3){
-						xPos+=5;
-					}
-				}
-				
-				pPos.push(xPos);
-				pPos.push(yPos);
-				pScale.push((1+7*noiseYMult));
-			}
-		}
-		for(y=0; y<Object.keys(connectArray).length;++y){
-			for(x=0; x<connectArray[y].length;++x){
-				xPos=pPos[y*2];
-				yPos=pPos[y*2+1];
-				xTo=pPos[connectArray[y][x]*2];
-				yTo=pPos[connectArray[y][x]*2+1];
-				lineMult=((rowMult[y]+3)/(lineCount.length+3));
-				drawLine([xPos,yPos,xTo,yTo],3*lineMult,gridColor,1,0,curCanvas,[-1]);
-			}
-		}
-		for(y=0; y<(pPos.length/2);++y){
-			xPos=pPos[y*2];
-			yPos=pPos[y*2+1];
-			drawGeo([xPos,yPos],1,pScale[y],pointColor,1,-1,-1,curCanvas);
-		}
-		return pPos;
-}
 
 function maximizeImbix(){
 	document.getElementById("activatedImbix").style.zIndex="1000";
@@ -162,6 +62,19 @@ function maximizeImbix(){
 	document.getElementById("activatedImbix").style.height="100%";
 	document.getElementById("activatedImbix").style.width="100%";
 	imbix.style.zIndex="940";
+	geoList['imby'][0].visible=true;
+	geoList['imbyGlowMask'][0].visible=true;
+	document.getElementById("glDraw").style.visibility="visible";
+	document.getElementById("lwin_l1_draw").style.top=-sH*.12;
+	
+	imbyScreenDraw([-1,-1,-1,1,-1,-1],[0,70],0);
+	if(mapPause==0){
+		var aspectRatio=mapCanvas.width/mapCanvas.height;
+		mapEngine.setClearColor(0x000000, 0);
+		mapEngine.setPixelRatio(window.devicePixelRatio);
+		mapRender(runner);
+	}
+	mapPause=0;
 }
 function minimizeImbix(){
 	document.getElementById("activatedImbix").style.zIndex="-1000";
@@ -173,6 +86,20 @@ function minimizeImbix(){
 	document.getElementById("activatedImbix").style.height="0%";
 	document.getElementById("activatedImbix").style.width="0%";
 	imbix.style.zIndex="-940";
+	geoList['imby'][0].visible=false;
+	geoList['imbyGlowMask'][0].visible=false;
+	document.getElementById("lwin_l1_draw").style.top=0;
+	//reinitializeSettings(0);
+
+	toCenter=1;
+	mirror=3;
+	brushDraw=2;
+	trail=0;
+	$('#cs_red_val').val(-3);
+	$('#cs_green_val').val(-3);
+	$('#cs_blue_val').val(-3);
+	$('#cs_red_val').val( 0 );
+	mapPause=1;
 }
 
 //////// Activate Movements
@@ -191,7 +118,7 @@ function imbixBotActivate(){
 			imbix.style.top=(sH/2)+offY+noiseY;
 		}
 		
-		imbixFieldMove();
+		//imbixFieldMove();
 	}
 }
 
@@ -292,7 +219,7 @@ function initImbix() {
 
 	imbixOver=0;
 	imbix = document.getElementById('imbixBot');
-	paused=document.hasFocus();
+	//paused=document.hasFocus();
 	imbixBotMove();
 	
 }

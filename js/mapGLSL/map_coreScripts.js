@@ -259,12 +259,28 @@ function getBBoxCentroid(curObj){
 ////////////////////////////////////////////////////
 ////////////////////////////////////////////////////
 
+function stepClock(){
+	if(clockStart==0){
+		clockStart=Date.now()*.001;
+		clockPrev=clockStart;
+		clockCur=clockStart;
+		clockDelta=clockStart;
+	}
+	var tempCur=clockCur;
+	clockCur=Date.now()*.001;
+	clockDelta=clockCur-clockPrev;
+	clockStartDelta=clockCur-clockStart;
+	clockPrev=clockCur;
+}
 
 function mapRender(){
 	var curMS=Date.now();
-	runner++;
+	renderRunner++;
 	
-	//mapUpdateCamera();
+	stepClock();
+	
+	mapUpdateObjects();
+	mapUpdateCamera();
 		
 	var curCrop=1;
 	//mainMenuShaderPass.uniforms.cropTop.value=1-((1-mapMainMenuCropTop)*curCrop);
@@ -272,21 +288,32 @@ function mapRender(){
 	//mainMenuShaderPass.uniforms.cropBottom.value=mapMainMenuCropBottom*curCrop;
 	var menuBottom=(1-mapMainMenuCropBottom*curCrop)*sH;
 	
-	var offsetNoise=Math.sin(runner*.0187+Math.cos(runner*.003)+352.15);
-	offsetNoise=Math.sin(runner*.00145+Math.cos(runner*.0075+165.91)+offsetNoise)*.5+.5;
+	var offsetNoise=Math.sin(renderRunner*.0187+Math.cos(renderRunner*.003)+352.15);
+	offsetNoise=Math.sin(renderRunner*.00145+Math.cos(renderRunner*.0075+165.91)+offsetNoise)*.5+.5;
 
 	mapSlipNoise.unshift(offsetNoise);
 	mapSlipNoise.pop();
+	let offset=(mouseX/sW*.4+.3);
+	mainMenuShaderPass.uniforms.uOffset.value=offset;
 	mainMenuShaderPass.uniforms.flicker.value=offsetNoise;
-	mainMenuShaderPass.uniforms.time.value=runner;
+	mainMenuShaderPass.uniforms.time.value=renderRunner;
+	
+	mapEngine.render(mapScene,mapCam);
+	mapEngine.render(mapImbyGlowScene,mapCam,mapImbyGlowBuffer);
 	
 	map_glComposer.render();
+	//map_glComposer.swapBuffers();
+	mapImbyGlowPassBuffer.texture=map_glComposer.readBuffer.texture;
+	//map_glComposer.swapBuffers();
+	
+	mainMenuShaderPass.uniforms.tGlowMask.value=mapImbyGlowBuffer.texture;
+	imbyBlurShaderPass.uniforms.tDiffuse.value=mapImbyGlowPassBuffer.texture;
 			
 	objsBooted=1;
 	
-	/*if(mapPause == 0){
+	if(mapPause == 0){
 		setTimeout(function(){
 			requestAnimationFrame(mapRender);
-		},25);
-	}*/
+		},35);
+	}
 }

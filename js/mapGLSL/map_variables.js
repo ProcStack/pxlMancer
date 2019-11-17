@@ -1,6 +1,11 @@
 var mapCore="glDraw";
 var mapEngine,mapGl,mapCam,mapScene,mapComposer,mapDepthComposer,mapSlimComposer;
+var map_glComposer, mainMenuShader, mainMenuShaderPass, mainMenuPass, mapImbyGlowScene, mapImbyGlowBuffer,mapImbyGlowPassBuffer,imbyBlurShader,mbyBlurShaderPass;
+
+
+
 var mapResPerc=mobile?.25:.5;
+
 var mapAutoQuality=1;
 //var loadFullTome=mobile?0:1;
 var loadFullTome=0;
@@ -19,6 +24,7 @@ var mapReduceLoadCount=0;
 var mapReduceLoadPrevCount=mobile?3:6;
 var mapReduceLoadMode=0;
 var mapReduceLoadDelta=mobile?3:6;
+
 
 //--------------------------
 
@@ -104,7 +110,7 @@ var geoFunctionList=[];
 var lightList=[];
 var lightMapList=[];
 var mapPause=0;
-//var runner=-1;
+var renderRunner=-1;
 var objsBooted=0;
 var particlesBooted=0;
 var pi=3.14159265358979;
@@ -162,72 +168,6 @@ var mapBookDataTexPath=textureRoot+"map_Book/pageData/";
 // sectionGroup - Group of all pages; vis toggle
 var mapBookContents=[];
 
-if(loadFullTome==1){
-	mapBookContents[0]={
-		'name':"Blank",
-		'page':"Blank",
-		'count':2,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-	mapBookContents[1]={
-		'name':"Book's Table of Contents",
-		'page':"BookContents",
-		'count':2,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-	mapBookContents[2]={
-		'name':"Fall 2018 Crowds & Technical Reels",
-		'page':"Reel",
-		'count':2,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-	mapBookContents[3]={
-		'name':"Kevin Edzenga's Resume",
-		'page':"Resume",
-		'count':2,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-	mapBookContents[4]={
-		'name':"The Making of Metal Asylum",
-		'page':"MakingOf",
-		'count':12,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-	mapBookContents[5]={
-		'name':"Extended Content; Projects & Scripts",
-		'page':"ExtendedContent",
-		'count':2,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-	mapBookContents[6]={
-		'name':"Writings Of The Self",
-		'page':"OfSelf",
-		'count':8,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-	mapBookContents[7]={
-		'name':"Contact Form",
-		'page':"Contact",
-		'count':2,
-		'curPage':[0,0],
-		'prevPage':-1,
-		'objMesh':[],
-		'sectionGroup':null,};
-}
 var mapBookOpen=0;
 var mapBookDir=0;
 var mapBookSection=1;

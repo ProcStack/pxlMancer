@@ -37,7 +37,6 @@
 	mapMouse.y=-(mouseY/sH)*2 + 1;
 }
 */
-//if(addToProcessorScene){mapProcessScene.add(processorObj[0]);}
 function mapOnDown(e){
 	e.preventDefault();
 	mouseButton=e.which;
@@ -127,7 +126,7 @@ function mapOnExitMode(){
 function resizeRenderResolution(){
 	mapW=(sW=window.innerWidth)*mapResPerc;
 	mapH=(sH=window.innerHeight)*mapResPerc;
-	
+	console.log("Xx "+mapW+" - "+mapH);
 	mapCanvas.width=mapW;
 	mapCanvas.height=mapH;
 	mapEngine.setPixelRatio(window.devicePixelRatio*mapResPerc);
@@ -415,115 +414,6 @@ function tListIdent(parentObj=null){
 	return ident;
 }
 
-
-function genIntroMesh(){
-		var xDiff=200;
-		var yDiff=30;
-		var yAdd=.3;
-		var noiseMult=10;
-		var noiseSpeed=.04;
-		var noiseOffset=imbixTimer*noiseSpeed;
-		var noiseYMult;
-		var x,y,xPos,yPos,xTo,yTo,xNoise,yNoise,lineMult;
-		var lineCount=[1,2,3,4,5,6,5,2];
-		var gridColor=[120,200,160];
-		var pointColor=[140,225,200];
-		clearScreen(curCanvas);
-		var pId=-1;
-		var pPos=[];
-		var pScale=[];
-		var rowMult=[];
-		var connectArray={
-			0 : [1,2],
-			1 : [3,4],
-			2 : [4,5],
-			3 : [6,7],
-			4 : [7,8],
-			5 : [8,9],
-			6 : [10,11],
-			7 : [11,12],
-			8 : [12,13],
-			9 : [13,14],
-			10 : [15,16],
-			11 : [16,17],
-			12 : [17,18],
-			13 : [18,19],
-			14 : [19,20],
-			15 : [21],
-			16 : [21,22],
-			17 : [22,23],
-			18 : [23,24],
-			19 : [24,25],
-			20 : [25],
-			21 : [22],
-			22 : [26],
-			23 : [26,27],
-			24 : [27,25],
-			25 : [],
-			26 : [27]
-			};
-		
-		for(y=0; y<lineCount.length;++y){
-			for(x=0; x<lineCount[y];++x){
-				pId+=1;
-				rowMult.push(y);
-				xPos=(x/lineCount[y])*(xDiff*lineCount[y]) + (sW-xDiff*(lineCount[y]-1))/2;
-				yPos=y*yDiff + (sH-(lineCount.length+2)*yDiff)/2 + yAdd*y*y*y + sH/5;
-				noiseYMult=(y+3)/(lineCount.length+3);
-				xNoise=Math.sin(noiseOffset + x*31 + y*42 + pId + Math.cos( noiseOffset*1.5 - x*14 + y*51 - pId)*Math.cos(-noiseOffset*.8+x*56+y*26+pId)*3) * noiseMult*noiseYMult;
-				yNoise=Math.cos(-noiseOffset + x*20 + y*32 - pId + Math.sin( -noiseOffset*.9 - x*45 + y*22 + pId)*Math.sin(noiseOffset*1.2+x*25+y*62+pId)*3) * noiseMult*1.5*noiseYMult;
-				xPos+=xNoise;
-				yPos+=yNoise;
-				
-				if(y == 0){
-					yPos+=15;
-				}else if(y == 1){
-					yPos+=5;
-				}else if(y==6 || y==7){
-					if(lineCount[y]>2){
-						if(x == 0 || x == lineCount[y]-1){
-							yPos-=10;
-						}
-						if(x == 1 || x == lineCount[y]-2){
-							yPos+=10;
-						}
-					}else{
-						yPos-=5;
-					}
-				}else if(y==5){
-					if(x==2){
-						xPos-=5;
-					}else if(x==3){
-						xPos+=5;
-					}
-				}
-				
-				pPos.push(xPos);
-				pPos.push(yPos);
-				pScale.push((1+7*noiseYMult));
-			}
-		}
-		for(y=0; y<Object.keys(connectArray).length;++y){
-			for(x=0; x<connectArray[y].length;++x){
-				xPos=pPos[y*2];
-				yPos=pPos[y*2+1];
-				xTo=pPos[connectArray[y][x]*2];
-				yTo=pPos[connectArray[y][x]*2+1];
-				lineMult=((rowMult[y]+3)/(lineCount.length+3));
-				drawLine([xPos,yPos,xTo,yTo],3*lineMult,gridColor,1,0,curCanvas,[-1]);
-			}
-		}
-		for(y=0; y<(pPos.length/2);++y){
-			xPos=pPos[y*2];
-			yPos=pPos[y*2+1];
-			drawGeo([xPos,yPos],1,pScale[y],pointColor,1,-1,-1,curCanvas);
-		}
-		return pPos;
-
-	
-}
-
-
 // -------------
 // NOT MINE -- REFERENCE ONLY 
 // https://stackoverflow.com/questions/18016533/threejs-custom-3d-geometry-using-vertices
@@ -557,7 +447,7 @@ function initGeometry( R , L) {
 
     }
 
-    object = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:0x660033,         side:THREE.DoubleSide}));
+    object = new THREE.Mesh( geometry, new THREE.MeshBasicMaterial({color:0x660033, side:THREE.DoubleSide}));
     object.position.set(0,0,0);
     object.rotation.x = Math.PI * .35;//a bit of rotation to make the structure visible
     object.scale.set(.35,.35,.35);//again, to make things easier to see
@@ -574,7 +464,6 @@ function initGeometry( R , L) {
 
 
 function mapBootEngine(){
-	
 	// Rederer
 	mapEngine=new THREE.WebGLRenderer({
 		canvas: mapCanvas,
@@ -591,9 +480,12 @@ function mapBootEngine(){
 		console.log("-- Depth Composer pass currently not used, --");
 		console.log("  -- A future technology for Metal Asylum --");
 	}
+	var aspectRatio=mapCanvas.width/mapCanvas.height;
 	mapEngine.setClearColor(0x000000, 0);
 	mapEngine.setPixelRatio(window.devicePixelRatio);
-	mapEngine.setSize(mapW/mapResPerc, mapH/mapResPerc);
+	//mapEngine.setPixelRatio(aspectRatio);
+	//mapEngine.setSize(mapW*mapResPerc, mapH*mapResPerc);
+	mapEngine.setSize(mapW, mapH);
 	//mapEngine.gammaOutput=true;
 	
 	texLoader=new THREE.ImageLoader();
@@ -604,51 +496,164 @@ function mapBootEngine(){
 	if(mobile==3){
 		mapEngine.shadowMap.type=THREE.BasicShadowMap;
 	}else{
-		mapEngine.shadowMap.type=THREE.PCFScatterShadowMap;//PCFShadowMap;//PCFSoftShadowMap;
+		mapEngine.shadowMap.type=THREE.PCFSoftShadowMap;//THREE.PCFScatterShadowMap;//PCFShadowMap;//PCFSoftShadowMap;
 		//mapEngine.shadowMap.type=THREE.PCFSoftShadowMap;
 	}
 	
-	var aspectRatio=mapCanvas.width/mapCanvas.height;
-	mapCam=new THREE.PerspectiveCamera(35,aspectRatio, 1, 3000);
-	mapCam.position.z=130;
+	//aspectRatio=sW/sH;
+	mapCam=new THREE.PerspectiveCamera(35,aspectRatio, 1, 500);
+	mapCam.position.x=0;
+	mapCam.position.y=10;
+	mapCam.position.z=30;
 	mapCam.target=new THREE.Vector3(0,0,0);
 	mapScene=new THREE.Scene();
-	mapProcessScene=new THREE.Scene();
+	mapImbyGlowScene=new THREE.Scene();
+	mapImbyGlowBuffer=new THREE.WebGLRenderTarget(mapCanvas.width, mapCanvas.height);
+	mapImbyGlowPassBuffer=new THREE.WebGLRenderTarget(mapCanvas.width, mapCanvas.height);
 	
 	textureQuality="_1k";
 	
 	var textureList;
 	var transformList;
+	let imbyPlaneScale=.0175;
 	
-	var ground=new THREE.PlaneGeometry(400,250,100,100);
-	var groundMat;
+	var imbyObj=new THREE.PlaneGeometry(1024*imbyPlaneScale,256*imbyPlaneScale,10,10);
+	var imbyMat;
 	if(mobile==1){
-		groundMat=new THREE.MeshLambertMaterial();
+		imbyMat=new THREE.MeshLambertMaterial();
 	}else{
-		groundMat=new THREE.MeshStandardMaterial();
+		imbyMat=new THREE.MeshStandardMaterial();
 	}
 	
-	var groundMesh=new THREE.Mesh(ground,groundMat);
-	groundMesh.material.emissive=new THREE.Color( 0x101010 );
-	groundMesh.material.roughness=.9;
-	groundMesh.rotation.x=-90*(Math.PI/180);
-	groundMesh.position.z=-50;
-	mapScene.add(groundMesh);
-	//mapProcessScene.add(groundMesh.clone());
-	groundMesh.receiveShadow=true;
-	geoList["table"]=[groundMesh,ground];
+	imbyMat=new THREE.ShaderMaterial({
+		uniforms:{
+			"tDiffuse":{type:"t",value:0,texture:null},
+			"uTimer":{type:"f",value:0},
+			"uOffset":{type:"f",value:0},
+			"uScale":{type:"f",value:0},
+		},
+		vertexShader:document.getElementById("curvingVert").textContent,
+		fragmentShader:document.getElementById("imbyWarpFrag").textContent
+	});
+	imbyMat.uniforms.tDiffuse.value=map_loadTexture("textures/pxlmancerIntroCard_diffuse.png", 0);
 	
+	var imbyMesh=new THREE.Mesh(imbyObj,imbyMat);
+	/*imbyMesh.material.emissive=new THREE.Color( 0x101010 );
+	imbyMesh.material.map=map_loadTexture("textures/pxlmancerIntroCard_diffuse.png", 0);
+	imbyMesh.material.roughness=.9;
+	imbyMesh.material.transparent=true;*/
+	//imbyMesh.rotation.x=-90*(Math.PI/180);
+	imbyMesh.position.x=0.0;
+	imbyMesh.position.y=0.0;
+	imbyMesh.position.z=-50;
+	//imbyMesh.rotation.x=90;
+	imbyMesh.receiveShadow=true;
+	imbyMesh.matroxAutoUpdate=false;
+	mapScene.add(imbyMesh);
+	
+	geoList["imby"]=[imbyMesh,imbyObj];
+	
+	
+	var imbyGlowMaskObj=new THREE.PlaneGeometry(1024*imbyPlaneScale,256*imbyPlaneScale,10,10);
+	var imbyGlowMaskMat=new THREE.ShaderMaterial({
+		uniforms:{
+			"tDiffuse":{type:"t",value:0,texture:null},
+			"uTimer":{type:"f",value:0},
+			"uOffset":{type:"f",value:0},
+			"uScale":{type:"f",value:0},
+		},
+		vertexShader:document.getElementById("curvingVert").textContent,
+		fragmentShader:document.getElementById("imbyMaskFrag").textContent
+	});
+	imbyGlowMaskMat.uniforms.tDiffuse.value=map_loadTexture("textures/pxlmancerIntroCard_glowMask.jpg", 0);
+	
+	var imbyGlowMaskMesh=new THREE.Mesh(imbyGlowMaskObj,imbyGlowMaskMat);
+	//imbyGlowMaskMesh.rotation.x=-90*(Math.PI/180);
+	imbyGlowMaskMesh.position.x=0.0;
+	imbyGlowMaskMesh.position.y=0.0;
+	imbyGlowMaskMesh.position.z=-50.0;
+	//imbyGlowMaskMesh.rotation.x=90;
+	imbyGlowMaskMesh.receiveShadow=true;
+	imbyGlowMaskMesh.matroxAutoUpdate=false;
+	mapImbyGlowScene.add(imbyGlowMaskMesh);
+	
+	geoList["imbyGlowMask"]=[imbyGlowMaskMesh,imbyGlowMaskObj];
+	
+	
+	
+	if(drawGrid==1){
+		var gridObj=new THREE.PlaneGeometry(100,100,10,10);
+		var gridMat=new THREE.ShaderMaterial({
+			uniforms:{
+				"tDiffuse":{type:"t",value:0,texture:null},
+			},
+			vertexShader:document.getElementById("defaultVert").textContent,
+			fragmentShader:document.getElementById("gridFrag").textContent
+		});
+		var gridMesh=new THREE.Mesh(gridObj,gridMat);
+		gridMesh.rotation.x=-90*(Math.PI/180);
+		//gridMesh.position.z=-50;
+		//gridMesh.position.x=-25.6;
+		//gridMesh.rotation.x=90;
+		gridMesh.material.transparent=true;
+		mapScene.add(gridMesh);
+		geoList["grid"]=[gridMesh,gridObj];
+	}
+	
+	/*
+	var xBarObj=new THREE.PlaneGeometry(2,400,10,10);
+	var xBarMat;
+	if(mobile==1){
+		xBarMat=new THREE.MeshLambertMaterial();
+	}else{
+		xBarMat=new THREE.MeshStandardMaterial();
+	}
+	var xBar=new THREE.Mesh(xBarObj,xBarMat);
+	xBar.material.emissive=new THREE.Color( 0x101010 );
+	xBar.material.roughness=.9;
+	xBar.rotation.x=-90*(Math.PI/180);
+	//xBar.position.z=-50;
+	//xBar.position.x=-25.6;
+	//imbyMesh.rotation.x=90;
+	xBar.receiveShadow=true;
+	mapScene.add(xBar);
+	
+	var yBarObj=new THREE.PlaneGeometry(400,2,10,10);
+	var yBarMat;
+	if(mobile==1){
+		yBarMat=new THREE.MeshLambertMaterial();
+	}else{
+		yBarMat=new THREE.MeshStandardMaterial();
+	}
+	var yBar=new THREE.Mesh(yBarObj,yBarMat);
+	yBar.material.emissive=new THREE.Color( 0x101010 );
+	yBar.material.roughness=.9;
+	yBar.rotation.x=-90*(Math.PI/180);
+	//xBar.position.z=-50;
+	//xBar.position.x=-25.6;
+	//imbyMesh.rotation.x=90;
+	yBar.receiveShadow=true;
+	mapScene.add(yBar);
 	
 	//var intoMesh=genIntroMexh();
 	//geoList['introMesh']=introMesh;
-	
-	var ambLight=new THREE.AmbientLight(0xffffff,.1);
+	*/
+	var ambLight=new THREE.AmbientLight(0xffffff,1);
 	mapScene.add(ambLight);
+	mapImbyGlowScene.add(ambLight.clone());
 	
-	var ambLightMask=new THREE.AmbientLight(0xffffff,1);
-	mapProcessScene.add(ambLightMask);
+	var spotLight=new THREE.SpotLight(0xffffff);
+	spotLight.position.set(0, 150, 100);
+	spotLight.lookAt(new THREE.Vector3( 0, 50, -50 ));
+	spotLight.decay=.1;
+	spotLight.angle=.45;
+	spotLight.distance=200;
+	spotLight.penumbra=.1;
+	mapScene.add(spotLight);
+	//mapImbyGlowScene.add(spotLight.clone());
 	
-	objRaycast=new THREE.Raycaster();
+	
+	//objRaycast=new THREE.Raycaster();
 	/*
 	///////////////////////////////////////////////////////
 	// Post Processing; Vertex & Fragment Screen Shaders //
@@ -666,12 +671,11 @@ function mapBootEngine(){
 			"tDiffuse":{type:"t",value:0,texture:null},
 			"fade":{type:"f",value:mapCamObjLatchBlend},
 		},
-		vertexShader:document.getElementById("anchoredObjectVert").textContent,
+		vertexShader:document.getElementById("defaultVert").textContent,
 		fragmentShader:document.getElementById("anchoredMaskFrag").textContent
 	});
 	// Composer - Default Scene; All objects
 	mapDepthComposer = new THREE.EffectComposer(mapEngine, renderBuffer);
-	maskPass=new THREE.RenderPass(mapProcessScene,mapCam,null,0,0);
 	maskShaderPass=new THREE.ShaderPass(applyMaskShader);
 	
 	mapDepthComposer.addPass(maskPass);
@@ -690,7 +694,7 @@ function mapBootEngine(){
 			"fade":{type:"f",value:mapCamObjLatchBlend},
 			"maskDisplay":{type:"i",value:maskRender}
 		},
-		vertexShader:document.getElementById("anchoredObjectVert").textContent,
+		vertexShader:document.getElementById("defaultVert").textContent,
 		fragmentShader:document.getElementById("anchoredFogFrag").textContent
 	});
 	// Composer - Default Scene; All objects
@@ -707,31 +711,88 @@ function mapBootEngine(){
 	///////////////////////////////////////////////////////
 	// Temp Main Menu Latch
 	
+	var xRes=mapW*mapResPerc;
+	var yRes=mapH*mapResPerc;
+	//xRes=mapEngine.context.drawingBufferWidth;
+	//yRes=mapEngine.context.drawingBufferHeight;
+	console.log(xRes+" --- "+yRes);//
+	var xRatio=1/xRes;
+	var yRatio=1/yRes;
+	var res=sW/sH;
+	
 	mainMenuShader=new THREE.ShaderMaterial({
 		uniforms:{
 			"tDiffuse":{type:"t",value:0,texture:null},
+			"tGlowMask":{type:"t",value:mapImbyGlowBuffer.texture},
+			"tGlowPass":{type:"t",value:mapImbyGlowBuffer.texture},
+			"tGlowNoise":{type:"t",value:mapImbyGlowBuffer.texture},
+			"uOffset":{type:"f",value:0},
 			"flicker":{type:"f",value:0},
 			"time":{type:"f",value:0},
-			"cropTop":{type:"f",value:.3},
-			"cropBottom":{type:"f",value:.5},
+			"resPerc":{type:"f", value:res},
+			"xRes":{type:"f", value:xRes},
+			"yRes":{type:"f", value:yRes},
+			"xRatio":{type:"f", value:xRatio},
+			"yRatio":{type:"f", value:yRatio},
 		},
-		vertexShader:document.getElementById("anchoredObjectVert").textContent,
-		fragmentShader:document.getElementById("tempMainMenuFrag").textContent
+		vertexShader:document.getElementById("defaultVert").textContent,
+		fragmentShader:document.getElementById("imbyCardFrag").textContent
+	});
+	mainMenuShader.uniforms['tGlowNoise'].value=map_loadTexture("textures/rgbNoise_HighFreq_01_Tile.jpg", 0);
+	
+	
+	
+	imbyBlurShader=new THREE.ShaderMaterial({
+		uniforms:{
+			"tDiffuse":{type:"t",value:0,texture:null},
+			"resPerc":{type:"f", value:res},
+			"xRatio":{type:"f", value:xRatio},
+			"yRatio":{type:"f", value:yRatio},
+		},
+		vertexShader:document.getElementById("defaultVert").textContent,
+		fragmentShader:document.getElementById("imbyCardBlurFrag").textContent
 	});
 	
 	// Composer - Default Scene; All objects
 	map_glComposer = new THREE.EffectComposer(mapEngine);
 	mainMenuPass=new THREE.RenderPass(mapScene,mapCam);
+	//var copyPass=new THREE.ShaderPass(CopyShader);
 	mainMenuShaderPass=new THREE.ShaderPass(mainMenuShader);
 	mainMenuShaderPass.material.transparent=true;
+	imbyBlurShaderPass=new THREE.ShaderPass(imbyBlurShader);
+	imbyBlurShaderPass.material.transparent=true;
+	
+
 	
 	map_glComposer.addPass(mainMenuPass);
 	map_glComposer.addPass(mainMenuShaderPass);
+	map_glComposer.addPass(imbyBlurShaderPass);
+	//map_glComposer.addPass(copyPass);
 	//mainMenuPass.renderToScreen=true;
-	mainMenuShaderPass.renderToScreen=true;
+	//mainMenuShaderPass.renderToScreen=true;
+	imbyBlurShaderPass.renderToScreen=true;
+	map_glComposer.autoClear=false;
 	
 }
 
+
+function mapUpdateObjects(){
+	var cp=mapCam.position;
+	//cp=( (mouseX-sW*.5)*2/sW )*100;
+	let mOff=((mouseX/sW)-.5)*2;
+	//mOff=1-(1-mOff)*(1-mOff);
+	geoList['imby'][0].material.uniforms.uTimer.value=clockStartDelta;
+	geoList['imbyGlowMask'][0].material.uniforms.uTimer.value=clockStartDelta;
+	geoList['imby'][0].material.uniforms.uOffset.value=mOff;
+	geoList['imbyGlowMask'][0].material.uniforms.uOffset.value=mOff;
+	geoList['imby'][0].material.uniforms.uScale.value=1;
+	geoList['imbyGlowMask'][0].material.uniforms.uScale.value=1;
+	//geoList['imby'][0].lookAt( mapCam.position.add(new THREE.Vector3( -cp, 0, 0 ) ) );
+	//geoList['imbyGlowMask'][0].lookAt( mapCam.position.add(new THREE.Vector3( -cp, 0, 0 ) ) );
+	//geoList['imbyGlowMask'][0].matrixWorld=geoList['imby'][0].matrixWorld;
+}
+
+/*
 function mapOnUpRayCaster(){
 	var camResetLatchObj=0;
 	if(objRayList.length > 3-mobile && !xyDeltaData.latched){
@@ -851,7 +912,7 @@ function mapOnUpBook(){
 		}
 	}
 }
-
+*/
 /*
 var lineMat=new THREE.LineBasicMaterial({ color:0xff0000 });
 var lineGeo=new THREE.Geometry();

@@ -1,4 +1,4 @@
-var whiteList=['pxlV7'];
+var whiteList=['pxlV8'];
 this.addEventListener('install', function(e){
 	e.waitUntil(
 		caches.open(whiteList[0]).then(function(cache){
@@ -24,7 +24,23 @@ this.addEventListener('install', function(e){
 				'js/variables.js',
 				'js/howTo.js',
 				'js/selectTool.js',
-				'js/boot.js'
+				'js/boot.js',
+				'js/mapGLSL/map_three.min.js',
+				'js/mapGLSL/EffectComposer.js',
+				'js/mapGLSL/RenderPass.js',
+				'js/mapGLSL/CopyShader.js',
+				'js/mapGLSL/ShaderPass.js',
+				'js/mapGLSL/dat.gui.min.js',
+				'js/mapGLSL/stats.min.js',
+				'js/mapGLSL/map_boot.js',
+				'js/mapGLSL/map_variables.js',
+				'js/mapGLSL/map_interface.js',
+				'js/mapGLSL/map_coreScripts.js',
+				'js/mapGLSL/map_cameraControl.js',
+				'textures/pxlmancerIntroCard_diffuse.png',
+				'textures/pxlmancerIntroCard_glowMask.jpg',
+				'textures/rgbNoise_HighFreq_01_Tile.jpg',
+				'textures/rgbNoise_LowFreq_01.jpg'
 			]);
 		})
 	);

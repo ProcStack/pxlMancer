@@ -4,7 +4,7 @@ function setBackgroundMode(mode){
 		var pushCan=document.getElementById('gradientBG');
 		var pushDraw=pushCan.getContext("2d");
 		pushDraw.clearRect(0,0,sW,sH);
-		pushDraw.drawImage(canvas,0,0,sW,sH);
+		try{ pushDraw.drawImage(canvas,0,0,sW,sH); }catch(err){} // hmmm......
 		updateLayerCanvas('lwin_bgLayer');
 		$("#sl"+diaVal+"_setWidth_val").val('7');
 		setSlideControl("sl_setWidth",'');
@@ -46,18 +46,20 @@ function setBackgroundMode(mode){
 }
 
 function setActive(){
+	active=1;
 	if(dispStats==1){
 		$("#dragCount").html(dragCount);
 	}
+	minimizeImbix();
 	$("#imbixBot").remove();
-	$("#activatedImbix").remove();
+	//$("#activatedImbix").remove();
 	if(touchCheck==0 && mobile==0){
 		document.getElementById("drawOptions").style.visibility="visible";
 	}else{
 		toggleSlideMenu(1);
 	}
 	$("#layersWindow").css({'visibility':'visible','zIndex':5000});
-	active=1;
+	
 	var canvas=document.getElementById("undoDraw");
 	canvas.setAttribute("width", sW);
 	canvas.setAttribute("height", sH);
@@ -114,6 +116,9 @@ function getMouseXY(e) {
 	//	$("#alertFeed1").html(compMethod);
 	//	$("#alertFeed2").html(brushStyle);
 	//}
+	if(mapPause==1){
+		stepClock();
+	}
 	if(howToActive==0){
 	//if(touchCheck==0){
 		if(e!=0){
@@ -128,7 +133,12 @@ function getMouseXY(e) {
 			zoomMouseX=mouseX;
 			zoomMouseY=mouseY;
 		}
-
+		/*if(active==0){
+			if(dragClick==1 && dragging==0){
+				active=1;
+			}
+			return;
+		}*/
 		if(mobile==0){
 			if(skipMenuSlide==''){
 				focusBlurMarquee('marqSelect',1);
@@ -169,6 +179,7 @@ function getMouseXY(e) {
 							//sH=window.innerHeight;
 							if(active==0){
 								setActive();
+								return;
 							}
 							if(!$("#tempWindow_1").length && tempWindowId>0){
 								setBackgroundMode(1);
@@ -228,6 +239,8 @@ function getMouseXY(e) {
 					}
 				}
 			}else{
+				if(active==0){ return; }
+				
 				if(!$("#tempWindow_1").length && tempWindowId>0){
 					setBackgroundMode(1);
 				}
@@ -349,30 +362,32 @@ function menuVis(vis,csSetVis){
 			setMenu=1;
 			var xto,yto,height,width,perc,ySet,parentClass,topDiv,setHeight;
 			for(x=0;x<divs.length;x++){
-				if(divs[x]!=skipMenuSlide){
-					div='#'+divs[x];
-					parentClass=$(div).parent();
-					topDiv=$(parentClass).parent();
-					width=$(parentClass).width();
-					xto=Math.abs($(div).offset().left+width/2-mouseX);
-					if(mouseY< $(div).offset().top+60){
-						yto=Math.abs($(div).offset().top-mouseY+60);
-						perc=(Math.sqrt(xto*xto+yto*yto)+15)/150;
+				try{
+					if(divs[x]!=skipMenuSlide){
+						div='#'+divs[x];
+						parentClass=$(div).parent();
+						topDiv=$(parentClass).parent();
+						width=$(parentClass).width();
+						xto=Math.abs($(div).offset().left+width/2-mouseX);
+						if(mouseY< $(div).offset().top+60){
+							yto=Math.abs($(div).offset().top-mouseY+60);
+							perc=(Math.sqrt(xto*xto+yto*yto)+15)/150;
+						}else{
+							perc=(xto+15)/150;
+						}
+						perc=Math.min(1,Math.max(0,perc));
+						height=$(parentClass).height();
+						ySet=$(parentClass).attr('y')-height*perc;
+						ySet=(height-20)*perc;
+						
+						$(parentClass).css({top:ySet,zIndex:20000});
+						//$(topDiv).css({height:ySet});
 					}else{
-						perc=(xto+15)/150;
+						div='#'+divs[x];
+						parentClass=$(div).parent();
+						$(parentClass).css({top:0,zIndex:20000});
 					}
-					perc=Math.min(1,Math.max(0,perc));
-					height=$(parentClass).height();
-					ySet=$(parentClass).attr('y')-height*perc;
-					ySet=(height-20)*perc;
-					
-					$(parentClass).css({top:ySet,zIndex:20000});
-					//$(topDiv).css({height:ySet});
-				}else{
-					div='#'+divs[x];
-					parentClass=$(div).parent();
-					$(parentClass).css({top:0,zIndex:20000});
-				}
+				}catch(err){}
 			}
 		//}
 		if(csSetVis==1){
@@ -1717,9 +1732,6 @@ function mobileImportImage(){
 	$("#mobile_imgOpen").click();
 }
 
-function modText(){
-	
-}
 
 function copyObject(obj,msg){
 	var dom=document.getElementById(obj);
@@ -1734,9 +1746,9 @@ function copyObject(obj,msg){
 	}
 	try{
 		curSelection.focusNode.select;
-	}catch{
+	}catch(err){
 		try{
 			curSelection.focusNode.select();
-		}catch{}
+		}catch(err){}
 	}
 }
