@@ -122,10 +122,10 @@ function runInitScripts(){ // Run initializing scripts
 			setTimeout(function(){	
 				
 				mapCanvas=document.getElementById("glDraw");
-				mapW=window.innerWidth*mapResPerc;
-				mapCanvas.width=window.innerWidth;
-				mapH=window.innerHeight*mapResPerc;
-				mapCanvas.height=window.innerHeight;
+				mapW=Math.max(sW*.5, 650);//window.innerWidth*mapResPerc;
+				mapCanvas.width=mapW;//window.innerWidth;
+				mapH=sH*.20;//window.innerHeight*mapResPerc;
+				mapCanvas.height=mapH;//window.innerHeight;
 				mapBootEngine();
 
 				bootStep(1,"Building Backgrounds..");
@@ -135,6 +135,7 @@ function runInitScripts(){ // Run initializing scripts
 					}
 					bootStep(1,"Building Backgrounds..");
 					setTimeout(function(){ // Step by step
+	var pre=new Date().getTime();
 						if(mobile==0){// || slimLoad==0){
 							setLayerRes(0, [origSW/1.5,origSH/1.5], 1, 1);
 							gradientInit(1,1);
@@ -143,6 +144,15 @@ function runInitScripts(){ // Run initializing scripts
 							gradientInit(0,1);
 							$('#tempBG').remove();
 						}
+	var post=new Date().getTime();
+	var delta=post-pre;
+	machineBenchmark=Math.max(0, delta-500);
+	machineBenchmark=1-(machineBenchmark*.0005);
+	console.log("Benchmark Time -- "+delta);
+	console.log("Machine Base Quality -- "+machineBenchmark);
+	//mapResPerc=machineBenchmark;
+	//			resizeRenderResolution(1);
+	
 						saveInit();					
 						bootStep(1,"Building Color Sphere..");
 						setTimeout(function(){ // It takes a while to load...	
@@ -638,6 +648,9 @@ function resetCanvas(){
 	origSW=window.innerWidth;
 	origSH=window.innerHeight;
 	resizeLayerScrollWindow();
+	if(mapPause==1){
+		zoomLayers(0,0,1);
+	}
 	preventDefault;
 }
 function reinitializeSettings(prompt){
@@ -721,7 +734,6 @@ function reinitializeSettings(prompt){
 	$("#cs_random_val").val( 0 );
 	setSlideControl('cs_random','');
 	$('#cs_red_val').val('-3');
-	setSlideControl('cs_red','');
 
 	eval($("#barMenu_setWidth").attr('onclick'));
 	eval($("#barMenu_setWidth").attr('onmouseup'));
@@ -951,7 +963,7 @@ function imbyScreenDraw(run,rand,messPosPrompt){
 					}
 					$('#cs_red_val').val(  randColor );
 					//filter=3;
-					//spray=Math.max(0, (run[0]%10)-6);
+					spray=Math.max(0, (run[0]%10)-6);
 					//messPosPrompt=[...messPosPrompt.slice(0,2)];
 					//brushDraw=(run[0]%4);
 					

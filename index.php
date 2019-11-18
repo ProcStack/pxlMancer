@@ -131,7 +131,7 @@ if(count($_POST)>0){
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
 <meta name="msapplication-navbutton-color" content="#102030">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -320,7 +320,7 @@ V1.4 - 6/4/2016-11/12/2016 -
   Added introduction dialogue to ask what the user wants to do at the site
   Added Sweep brush
   Added Shape Tool
-V1.5 - 10/9/2019-11/12/2019 -
+V1.5 - 10/9/2019-11/17/2019 -
   [Hello old friend! Decided it was time to revamp a few things and get a new GUI going!]
   Shape Tool updates
     - Now supports multiple shapes at once
@@ -364,29 +364,45 @@ V1.5 - 10/9/2019-11/12/2019 -
 //https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers
 //Suplimentary example files-
 //https://github.com/mdn/sw-test
-if('serviceWorker' in navigator){
-	<?php if($_SERVER['HTTP_HOST']=='localhost'){ ?>
-		var sc="/projects/Metal-Asylum/";
-	<?php }else{ ?>
-		var sc="/";
-	<?php } ?>
+window.isUpdateAvailable=new Promise(function(resolve, reject){
+	if('serviceWorker' in navigator){
+		<?php if($_SERVER['HTTP_HOST']=='localhost'){ ?>
+			var sc="/projects/Metal-Asylum/";
+		<?php }else{ ?>
+			var sc="/";
+		<?php } ?>
 
-	navigator.serviceWorker.register(sc+'served.js', {scope: sc})
-	.then(function(reg){
-		console.log('Ahoi!  Soooo, this Javascript Worker is going to load now...\n"+
-			"It this newer tech Google created to help people create cool sites to branch out more!"+
-			"Its called a Progressive Web App, helping my site load on your end easier, quicker,\n    and without using as much of your data plan,\n        Well, the next time you pop by.");
-		console.log("\nThat may sound scary cause its some 'pxlmancer' website latching onto your device like some leech!");
-		console.log('But it helps! Pxlmancer can reach more people! ... Ok, that still sounds bad...\n');
-		console.log('Pixelmancer can now load offline when visiting - https://pxlmancer.com');
-		console.log('Or launched as an app after saving it to your homescreen!');
-		console.log("Pixelmancer is 'bout 5meg total; updates occur automatically when visiting online.");
-		console.log('JavaScript Service Worker registered to browser. Scoped to '+reg.scope);
-	}).catch(function(err){
-		console.log('Service Worker failed to register - '+err);
-	});
-
-}
+		navigator.serviceWorker.register(sc+'served.js', {scope: sc})
+		.then(function(reg){
+			reg.onupdatefound= function(){
+				const installingWorker=reg.installing;
+				installingWorker.onstatechange=function(){
+					if(installingWorker.state=="installed"){
+						if(navigator.serviceWorker.controller){
+							resolve(true);
+						}else{
+							resolve(false);
+						}
+						console.log("Pxlmancer's Service Worker is already installed\n"+
+							"You can launch https://pxlmancer.com like an app offline with this!");
+					}else{
+						console.log("Ahoi!  Soooo, this Javascript Worker is going to load now...\n"+
+							"It this newer tech Google created to help people create cool sites to branch out more!"+
+							"Its called a Progressive Web App, helping my site load on your end easier, quicker,\n    and without using as much of your data plan,\n        Well, the next time you pop by."+
+							"\nThat may sound scary cause its some 'pxlmancer' website latching onto your device like some leech!"+
+							"But it helps! Pxlmancer can reach more people! ... Ok, that still sounds bad...\n"+
+							"\nPixelmancer can now load offline when visiting - https://pxlmancer.com"+
+							"Or launched as an app after saving it to your homescreen!"+
+							"Pixelmancer is 'bout 5meg total; updates occur automatically when visiting online."+
+							"\n\nJavaScript Service Worker registered to browser. Scoped to "+reg.scope);
+					}
+				};
+			};
+		}).catch(function(err){
+			console.log('Service Worker failed to register - '+err);
+		});
+	}
+});
 </script><?php } ?>
 <script type="text/javascript" src="jquery-1.11.0.min.js"></script>
 <?php $dev=''; ?>
@@ -467,16 +483,16 @@ if('serviceWorker' in navigator){
 		vec3 offset=vec3(0.0,0.0,  abs(position.x-uOffset*5.0));
 		pos=position;
 		off=offset;
-		//offset.z=(1.0-(1.0-offset.z)*(1.0-offset.z)) *.03;
+		offset.z=(1.0-(1.0-offset.z)*(1.0-offset.z)) *.001;
 		
-		vec4 modelViewPosition=modelViewMatrix * vec4(position, 1.0);
+		vec4 modelViewPosition=modelViewMatrix * vec4(position+offset, 1.0);
 		gl_Position = projectionMatrix*modelViewPosition;
 	}
 </script>
 <!-- -- -- -- -- -- -- -- -- -- -- -- -- -- -->
 <script type="x-shader/x-fragment" id="defaultFrag">
 <?php /* #include <packing> */ ?>
-	precision mediump float;
+	//precision mediump float;
 	uniform sampler2D tDiffuse;
 	varying vec2 vUv;
 	void main(){
@@ -486,7 +502,7 @@ if('serviceWorker' in navigator){
 </script>
 <script type="x-shader/x-fragment" id="imbyWarpFrag">
 <?php /* #include <packing> */ ?>
-	precision mediump float;
+	//precision mediump float;
 	uniform sampler2D tDiffuse;
 	varying vec3 pos;
 	varying vec3 off;
@@ -502,7 +518,7 @@ if('serviceWorker' in navigator){
 
 <script type="x-shader/x-fragment" id="gridFrag">
 <?php /* #include <packing> */ ?>
-	precision mediump float;
+	//precision mediump float;
 	varying vec2 vUv;
 	void main(){
 		vec4 Cd=vec4(  step( mod(vUv.x*20.0+.015, 1.0), 0.03) + step( mod(vUv.y*20.0+.015, 1.0) , 0.03) + step( mod(vUv.x*10.0+.02, 1.0), 0.04) + step( mod(vUv.y*10.0+.02, 1.0) , 0.04)  );
@@ -529,7 +545,7 @@ if('serviceWorker' in navigator){
 	varying vec2 vUv;
 	
 	vec4 reachOut(float reachMult, vec4 noise){
-		vec2 n=(noise.xy-vec2(.5,.5))*abs(noise.z-.5)*.1+vec2(.0,-.005);
+		vec2 n=(noise.xy-vec2(.2,.5))*abs(noise.z-.5)*.1+vec2(.0,-.02);
 		float reachInf=max( n.x, n.y );
 		vec2 fitUV=vUv;//*resPerc;
 		vec2 curUV=fitUV+n;
@@ -578,27 +594,33 @@ if('serviceWorker' in navigator){
 	}
 	
 	void main(){
-		float timer=time*0.0015;
+		float timer=time*.03;
 		vec4 origCd=texture2D(tDiffuse, vUv);
 		vec4 Cd=origCd;
 		vec4 passCd=texture2D(tGlowPass, vUv);
-		vec4 noiseCd=texture2D(tGlowNoise, vec2(vUv.x+sin(timer*.5+vUv.x*5.)*.2, mod(vUv.y-timer + sin((vUv.x-.5)*6.0*(passCd.r)),.998)+.001 ));
+		vec4 noiseCd=texture2D(tGlowNoise, vec2(vUv.x+sin(timer*.5+vUv.x*5.)*.2, mod(vUv.y*.3-timer + sin((vUv.x-.5)*6.0*(passCd.r)),.998)+.001 ));
 		float glowMult=texture2D(tGlowMask, vUv).r;
 		
-		float yMult=( (noiseCd.r-.5)-(noiseCd.g-.5)+(noiseCd.b-.5) )*.07;
-		yMult=min(1.0, max(0.0, time*(.1+yMult)-(vUv.y*5.0)));
+		float yMult=( (noiseCd.r-.5)-(noiseCd.g-.5)+(noiseCd.b-.5) )*.06;
 		float mouseOffset=( max(0.0, 1.0-abs(vUv.x-uOffset)*4.0) );
-		yMult*=mouseOffset;
+		yMult=min(1.0, max(0.0, time*(1.0+yMult)-(vUv.y*4.0)));
+		yMult+=mouseOffset*yMult;
 		
 		float curAlpha=Cd.a*max(glowMult,passCd.a);
-		vec4 reachCd=reachOut( 8.0*(1.0-curAlpha*.5), noiseCd );
+		float reachMult=max(0.0, ((1.0-vUv.y)-.5)*1.5+.7)*vUv.y;
+		vec4 reachCd=reachOut( 13.0*(1.0-curAlpha*.5)*reachMult+(5.0*mouseOffset)+5.0, noiseCd );
+		
 		Cd=mix(reachCd, Cd, mix(0., curAlpha*(1.-reachCd.a), Cd.a) );
 		//Cd.rgb+=reachCd.rgb*.1+.5;
-		Cd.rgb+=reachCd.rgb*.1+.5;
-		origCd.rgb+=Cd.rgb*Cd.a*.1;
+		Cd.rgb+=reachCd.rgb*.1+.5*yMult;
+		Cd.rgb*=vec3( .6, .9, .97 )*reachMult;
+		origCd.rgb+=Cd.rgb*Cd.a*.2;
 		
 		Cd=mix(Cd, origCd, max(0.0, min(1.0, origCd.a)) );
 		Cd.a*=yMult;
+		Cd.rgb+=mouseOffset*.15;
+		//Cd.rgb=vec3(reachMult);
+		//Cd.a=origCd.a;
 		
 		gl_FragColor=Cd;
 	}
@@ -606,7 +628,7 @@ if('serviceWorker' in navigator){
 
 <script type="x-shader/x-fragment" id="imbyCardBlurFrag">
 <?php /* #include <packing> */ ?>
-	precision mediump float;
+	//precision mediump float;
 	uniform sampler2D tDiffuse;
 	uniform float resPerc;
 	uniform float xRatio;
@@ -664,7 +686,7 @@ if('serviceWorker' in navigator){
 
 <script type="x-shader/x-fragment" id="imbyMaskFrag">
 <?php /* #include <packing> */ ?>
-	precision mediump float;
+	//precision mediump float;
 	uniform float fade;
 	uniform sampler2D tDiffuse;
 	varying vec2 vUv;
@@ -731,7 +753,7 @@ if('serviceWorker' in navigator){
 <div id="postLoader">
 <div style="overflow:hidden;height:100%;width:100%;position:fixed;top:0px;left:0px;user-select:none;-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;">
 	<div id="imbixBot"><div align='center'><div style="position:fixed;bottom:10%;left:50%;transform:translateX(-50%);"><!--<span style="font-size:200%;font-family:tahoma;color:#99ccbb;letter-spacing:4px;"><b>pxlmancer</b></span><br>--><span style="font-size:100%;color:#6eaaaa;letter-spacing:5px;">click anywhere to start</span><br><span style="font-size:75%;color:#4f8585;position:relative;bottom:3.5px;">--best experienced in <span style="color:#2d8585;">chrome</span>--</span></div>
-	<div style="position:fixed;bottom:3px;left:50%;transform:translateX(-50%);z-index:3;"><span style="font-size:55%;color:#6eaaaa;">created by <span style="font-size:145%;color:#2d8585;">kevi<span style="letter-spacing:2px;">n</span>edzenga</span> :: <span style="font-size:125%;color:#2d8585;">201<span style="letter-spacing:-2px;">4 | </span>2019</span> </span></div>
+	<div style="position:fixed;bottom:3px;left:50%;transform:translateX(-50%);z-index:3;"><span style="font-size:55%;color:#6eaaaa;">created by <span style="font-size:145%;color:#2d8585;">kevi<span style="letter-spacing:2px;">n</span>edzenga</span> :: <span style="font-size:100%;color:#2d8585;">201<span style="letter-spacing:-2px;">4 | </span>2019</span> </span></div>
 	<div style="position:fixed;bottom:3.5px;left:50%;transform:translateX(-50%);height:1px;width:300px;overflow:hidden;background-color:#374a4a;z-index:2;">&nbsp;</div>
 	</div></div>
 	<div id="activatedImbix">
@@ -807,7 +829,7 @@ if('serviceWorker' in navigator){
 	<div id="dialogues" style="overflow:hidden;height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
 	<!--  --  Save Drawing ---------------------------------  -->
 		<?php $curDiaName='saveDrawing'; ?>
-		<div id="saveDrawing" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, 'saveDrawing');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:600px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -830,7 +852,7 @@ if('serviceWorker' in navigator){
 		</div>
 <!--  --  How To  ---------------------------------  -->
 		<?php $curDiaName='howTo'; ?>
-		<div id="howTo" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, 'howTo');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:600px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -857,7 +879,7 @@ if('serviceWorker' in navigator){
 		
 	<!--  --  Keyboard Shortcuts  ---------------------------------  -->
 		<?php $curDiaName='keyShort'; ?>
-		<div id="keyShort" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, 'keyShort');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:600px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -902,7 +924,7 @@ if('serviceWorker' in navigator){
 		
 	<!--  --  Shape Tool Keyboard Shortcuts  ---------------------------------  -->
 		<?php $curDiaName='shapeToolShorts'; ?>
-		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, '<?php echo $curDiaName; ?>');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:800px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -934,22 +956,25 @@ if('serviceWorker' in navigator){
 		</div>
 	<!--  --  Info Dialogue  ---------------------------------  -->
 		<?php $curDiaName='swingInfo'; ?>
-		<div id="swingInfo" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, 'swingInfo');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:600px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
 			<div class="headerDia"><h1>What is this thing?</h1></div>
 			<div class="body" style="color:#cccccc;text-shadow:2px 2px 2px black;">
 			<div style="padding:10px;">
-			<span style="font-size:120%;">Welp, I don't really know, its sort of a drawing site.</span>
+			<span style="font-size:140%;">Welp, I don't really know, its sort of a drawing site.</span>
+			<br><img src="show/tvKid_sm.png" style="margin-left:auto;margin-right:auto;">
+			<br><span style="font-size:130%;">Mess around'n draw something trippy? Why not?</span>
 			<div align="center"><div style="position:relative;top:10px;height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
-			<br><span style="font-size:120%;">Some of the time, I'll just play around with the filters and playing some tunes.</span>
-			<br><span style="font-size:120%;">User driven EQ!</span>
-			<div align="center"><div style="position:relative;top:10px;height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
-			<br><span style="font-size:120%;">I'm mainly using this site as a place to learn some code while making one monster project.  Instead of a bunch of smaller projects.</span>
-			<br><br><span style="font-size:120%;">Since learning is never done, why not a never ending project either?</span>
+			<br><span style="font-size:120%;">I'm mainly using this site as a place to learn some code.
+			<br>&nbsp;&nbsp;&nbsp; <i>It kinda blew up in the process...</i></span>
+			<br><span style="font-size:120%;">But hey learning is never done, why not a never ending project?</span>
 			<?php /* <br><br><span style="font-size:120%;">On a side note, <b><?php echo $sa_count;?></b> people have used this site containing <b><?php echo $sa_lineCount; ?></b> lines of script in total.</span> */ ?>
-			<br><br><span style="font-size:120%;">On a side note, this site contains <b><?php echo $sa_lineCount; ?></b> lines of script in total; in HTML, Javascript, CSS, and PHP.</span>
+			<br>
+			<br><b><?php echo $sa_lineCount; ?></b> lines of personally typed scripting
+			<br><span style="font-size:110%;"><i><?php echo $sa_totalLineCount; ?> in total; from THREE.js</i>;
+			<br>Written in HTML, Javascript, CSS, PHP, & OpenGL.</span>
 			<br><span style="font-size:140%;">Enjoy!</span>
 			</div>
 			</div>
@@ -962,7 +987,7 @@ if('serviceWorker' in navigator){
 		
 	<!--  --  About Me  ---------------------------------  -->
 		<?php $curDiaName='aboutMe'; ?>
-		<div id="aboutMe" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, 'aboutMe');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:950px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -1179,12 +1204,13 @@ if('serviceWorker' in navigator){
 		<?php } ?>
 							<div class="buttonDia" tgl='0' grp='-3' >&nbsp;</div>
 							<div class="buttonDia" tgl='0' grp='-1' style="height:40px;overflow:hidden;" onclick="document.getElementById('slideMenu_donate').submit();">
-							<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank" id="slideMenu_donate">
-								<input type="hidden" name="cmd" value="_s-xclick">
-								<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-								<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-								<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-								</form>
+								<div style="height:25px;"><form id="slideMenu_donate" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+								<input type="hidden" name="cmd" value="_donations" />
+								<input type="hidden" name="business" value="pxl@pxlmancer.com" />
+								<input type="hidden" name="item_name" value="Help fund the creation of Pxlmancer!" />
+								<input type="hidden" name="currency_code" value="USD" />
+								<input type="image" src="images/btn_donate_SM.gif" width="74" height="21" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+								</form></div>
 							</div>
 		<?php if($mobile==1){ ?>
 							<div class="buttonDia" tgl='0' grp='-3' >&nbsp;</div>
@@ -1221,7 +1247,7 @@ if('serviceWorker' in navigator){
 <?php if($mobile==1){ ?>
 	<!--  --  Display Pulldown  ---------------------------------  -->
 		<?php $curDiaName='pulldownDisplay'; ?>
-		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:400px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;">
 			<div class="headerDia"><h1>Drawing Tool Options </h1></h1></h1></div>
 			<div id="pulldownOptionList" align='center'>
@@ -1233,11 +1259,11 @@ if('serviceWorker' in navigator){
 		
 	<!--  --  Contact Me Dialog  ---------------------------------  -->
 		<?php $curDiaName='contactMe'; ?>
-		<div id="contactMe" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, 'contactMe');">
 		<tr valign="middle"><td align="center">
-		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;height:300px;width:650px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
-			<div class="headerDia"><h1>CONTACT TRANCOR -</h1></div>
+		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;height:400px;width:700px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
+			<div class="headerDia"><h1>Contact - <span style="font-size:80%;">Kevin Edzenga; Trancor</span></h1></div>
 			<div class="body" style="color:#cccccc;text-shadow:2px 2px 2px black;">
 			<div align="center"><form id="contactMeForm">
 			<table cellpadding=0 cellspacing=0 border=0 style="width:580px;">
@@ -1251,7 +1277,15 @@ if('serviceWorker' in navigator){
 				<textarea cols=80 rows=8 id="contactMe_comment"  name="comment"></textarea></textarea>
 			</td></tr>
 			</table>
-			<div style="margin-right:200px;padding:10px;"><input type="button" value="Submit" onclick="isValidForm();"> - <input type="reset" label="Clear"></form> - <input type="button" value="Cancel" onClick="onDia=0;dialogueOption(0, 'contactMe');"></div>
+			<table border=0 cellpadding=0 cellspacing=0>
+				<tr><td>
+					<div style="margin-right:200px;padding:10px;"><input type="button" value="Submit" class="contact-button dialog-button" onclick="isValidForm();"></div>
+				</td>
+				<td>
+					<input type="reset" class="contact-button dialog-button" label="Clear"></form>&nbsp;&nbsp;&nbsp;<input type="button" value="Cancel" class="contact-button dialog-button" onClick="onDia=0;dialogueOption(0, 'contactMe');">
+				</td></tr>
+			</table>
+			<div>&nbsp;</div>
 			</div>
 			</div>
 			<div class="buttonDia" action='accept' tgl='0' grp='-1' id="<?php echo $curDiaName; ?>Back" onClick="if(touchCheck==1){dialogueVisToggle(0,'<?php echo $curDiaName; ?>');dialogueOption(1,'mobileMenu');}else{dialogueVis(0);dialogueVisToggle(0,'<?php echo $curDiaName; ?>');}" align="center">Back</div>
@@ -1264,27 +1298,27 @@ if('serviceWorker' in navigator){
 <?php if($mobile==0){ ?>
 	<!--  --  Save / Load Document Dialog  ---------------------------------  -->
 		<?php $curDiaName='saveLoadDocument'; ?>
-		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, '<?php echo $curDiaName; ?>');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;height:400px;width:650px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
 			<div class="headerDia"><h1>Save / Load Document</h1></div>
 			<div class="body" style="color:#cccccc;text-shadow:2px 2px 2px black;">
 			<div align="center">
-			<span style="font-size:110%;">**Saves & Loads will keep track of**<br>**all layer information and saved swatches**</span>
-			<br><span style="font-size:110%;">**Loading will override all current saved swatches**</span>
+			<span style="font-size:110%;">Saves keep layers and stored color spheres.
+			<br>Loading will erase all current work.</span>
 			<div align="center"><div style="opacity:.5;position:relative;top:0px;height:1px;margin-bottom:5px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
 			<table cellpadding=0 cellspacing=0 border=0 style="width:600px;">
 			<tr valign="middle"><td ><div style="font-size:120%;width:150px">File to load : </div></td><td>
-				<input type="file" accept=".pxlm" id="ldDia_fileOpen" size="60" style="margin-top:10px;">
+				<input type="file" class="dialog-button" accept=".pxlm" id="ldDia_fileOpen" size="60" style="margin-top:10px;">
 			</td><td>
-			<div align='center' style="padding:10px;"><input type="button" style='width:100;' value="Load File" onClick="var tmpName=tempWindow('..Generating Scene..',[-1,-1],'',2,0,0,1);setTimeout(function(){loadDocument('0');},20);"></div>
+			<div align='center' style="padding:10px;"><input type="button" class="dialog-button" style='width:100;' value="Load File" onClick="var tmpName=tempWindow('..Generating Scene..',[-1,-1],'',2,0,0,1);setTimeout(function(){loadDocument('0');},20);"></div>
 			</td></tr>
 			</table>
 			<br><div align="center"><div style="height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
 			<table cellpadding=0 cellspacing=0 border=0 style="width:580px;">
 			<tr valign="middle"><td><span style="font-size:120%;">Compile & Save Document : </span><input type='text' id='dlDia_genListCount' value='0' hidden></td><td>
-				<input type='button' value='Generate Download Link Below' onClick="var tmpName=tempWindow('..Generating Download Link	..',[-1,-1],'',2,0,0,1);setTimeout(function(){saveDocument(curCanvas,'pastDraw','gradientBG',tmpName);},20);">
+				<input type='button' class="dialog-button" value='Generate Download Link Below' onClick="var tmpName=tempWindow('..Generating Download Link	..',[-1,-1],'',2,0,0,1);setTimeout(function(){saveDocument(curCanvas,'pastDraw','gradientBG',tmpName);},20);">
 			</td></tr>
 			</table>
 			<div align="center"><div style="position:relative;top:0px;height:1px;margin-top:5px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
@@ -1305,7 +1339,7 @@ if('serviceWorker' in navigator){
 <?php if($mobile==1){ ?>
 	<!--  --  Share Pixelmancer  ---------------------------------  -->
 		<?php $curDiaName='sharePxl'; ?>
-		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, '<?php echo $curDiaName; ?>');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:700px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -1330,7 +1364,7 @@ if('serviceWorker' in navigator){
 		
 	<!--  --  Terms of Service Dialog  ---------------------------------  -->
 		<?php $curDiaName='termsOfService'; ?>
-		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, '<?php echo $curDiaName; ?>');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;height:380px;width:700px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -1356,7 +1390,7 @@ if('serviceWorker' in navigator){
 <?php if($mobile==0){ ?>
 	<!--  --  Edit Layer Dialog  ---------------------------------  -->
 		<?php $curDiaName='layerEditor'; ?>
-		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="dialogueOption(0, '<?php echo $curDiaName; ?>');">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:600px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="onDia=0;" align="left">
@@ -1380,7 +1414,7 @@ if('serviceWorker' in navigator){
 			<div align="center"><div style="margin-top:5px;margin-bottom:5px;height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
 			<table cellpadding=0 cellspacing=0 border=0 style="width:580px;">
 			<tr valign="middle"><td><span style="font-size:120%;">File to load : </span></td><td>
-				<input type="file" accept="images/*" id="elDia_imgOpen" onClick="$('#editLayer_method').val(0);" size="60" style="margin-top:10px;">
+				<input type="file" class="dialog-button" accept="images/*" id="elDia_imgOpen" onClick="$('#editLayer_method').val(0);" size="60" style="margin-top:10px;">
 			</td></tr>
 			</table>
 			<table cellpadding=0 cellspacing=0 border=0 style="width:600px;">
@@ -1389,11 +1423,11 @@ if('serviceWorker' in navigator){
 			<input type="radio" id="iil_radio3" name="importImageLayer_screenRes" value="tile"><span style="cursor:pointer;font-size:90%;" onclick="$('#iil_radio1').removeAttr('checked');$('#iil_radio2').removeAttr('checked');$('#iil_radio3').prop('checked',true);$('#editLayer_method').val(0);"> Tile image in layer</span></td></tr>
 			</table>
 			<div align='center'><div style="border:1px #226666 solid;z-index:1;height:200px;width:400px;overflow:hidden;"><canvas id="editLayer_tempDisp" height="200px" width="400px"></canvas></div></div>
-			<div align='center' style="padding:10px;"><input type="button" style="cursor:pointer;height:30px;width:200px;font-size:110%;" value="Import Image" onClick="importImage('elDia_imgOpen',curCanvas,1, document.querySelector('input[name=\'importImageLayer_screenRes\']:checked').value);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }"></div>
+			<div align='center' style="padding:10px;"><input type="button" class="dialog-button" style="cursor:pointer;height:30px;width:200px;font-size:110%;" value="Import Image" onClick="importImage('elDia_imgOpen',curCanvas,1, document.querySelector('input[name=\'importImageLayer_screenRes\']:checked').value);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }"></div>
 			<div align="center"><div style="margin-top:5px;margin-bottom:5px;height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
-			<div align='center' style="padding:10px;"><input type="button" style="cursor:pointer;font-size:110%;" value="Duplicate Layer" onClick="layerDuplicate(curCanvas);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"> - <input type="button" style="cursor:pointer;font-size:110%;" value="Merge Into Layer Below" onClick="layerMergeDown();onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div>
+			<div align='center' style="padding:10px;"><input type="button" class="dialog-button" style="cursor:pointer;font-size:110%;" value="Duplicate Layer" onClick="layerDuplicate(curCanvas);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"> - <input type="button" class="dialog-button" style="cursor:pointer;font-size:110%;" value="Merge Into Layer Below" onClick="layerMergeDown();onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div>
 			<div align="center"><div style="margin-top:5px;margin-bottom:5px;height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
-			<div align='center' style="padding:10px;"><input type="button" style="cursor:pointer;font-size:110%;" class='acceptButtonDia' value="Update Layer" onClick="renameLayer($('#editLayer_id').val(),$('#editLayer_rename').val());onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }"> - <input type="button" value="Cancel" style="cursor:pointer;font-size:110%;" onClick="onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div>
+			<div align='center' style="padding:10px;"><input type="button" class="dialog-button" style="cursor:pointer;font-size:110%;" class='acceptButtonDia' value="Update Layer" onClick="renameLayer($('#editLayer_id').val(),$('#editLayer_rename').val());onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }"> - <input type="button" class="dialog-button" value="Cancel" style="cursor:pointer;font-size:110%;" onClick="onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div>
 			</div>
 			</div>
 			<div class="buttonDia" tgl='0' grp='-1' id="layerBack" onClick="if(touchCheck==1){dialogueVisToggle(0,'<?php echo $curDiaName; ?>');dialogueVisToggle(1,'mobileMenu');}else{dialogueVis(0);dialogueVisToggle(0,'<?php echo $curDiaName; ?>');}" align="center">Back</div>
@@ -1405,7 +1439,7 @@ if('serviceWorker' in navigator){
 		
 	<!--  --  Edit Background Dialog  ---------------------------------  -->
 		<?php $curDiaName='backgroundEditor'; ?>
-		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="height:100px;width:100px;z-index:-5;visibility:hidden;position:fixed;top:0px;left:0px;">
+		<div id="<?php echo $curDiaName; ?>" class="dialogueWindow" style="z-index:-5;visibility:hidden;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);">
 		<table cellpadding='0' class="dialogueTable" cellspacing='0' style="height:100px;width:100px;border:0;cursor:alias;" onClick="if(setFromToColor==-1){dialogueOption(0, '<?php echo $curDiaName; ?>');}">
 		<tr valign="middle"><td align="center">
 		<div id="<?php echo $curDiaName; ?>Dialogue" style="cursor:auto;width:600px;z-index:1200;text-shadow:2px 2px 2px black;" onMouseOver="onDia=1;" onMouseOut="if(setFromToColor==-1){onDia=0;}else{onDia=1;}" align="left">
@@ -1415,7 +1449,7 @@ if('serviceWorker' in navigator){
 				<input type='text' value='1' id='editBackground_method' hidden><input type='text' value='0' id='editBackground_pattern' hidden><input type='text' value='1' id='editBackground_boot' hidden>
 			<table cellpadding=0 cellspacing=0 border=0 style="width:580px;">
 			<tr valign="middle"><td><span style="font-size:120%;">File to load : </span></td><td>
-				<input type="file" accept="images/*" id="eiDia_imgOpen" onClick="$('#editBackground_method').val(0);" size="60" style="margin-top:10px;">
+				<input type="file" class="dialog-button" accept="images/*" id="eiDia_imgOpen" onClick="$('#editBackground_method').val(0);" size="60" style="margin-top:10px;">
 			</td></tr>
 			</table>
 			<table cellpadding=0 cellspacing=0 border=0 style="width:600px;">
@@ -1439,12 +1473,12 @@ if('serviceWorker' in navigator){
 			<div align="center" style='font-size:100%;margin-bottom:2px;'>-- Gradient Settings Only -- </div>
 			<table cellpadding=0 cellspacing=0 border=0 style="width:580px;">
 			<tr valign="middle"><td><span style='font-size:120%;'>From Color : </span></td><td>
-				</td><td><input type="button" value="Pick From Color" style="cursor:pointer;" onClick="$('#editBackground_method').val(1);gradientRunner('editBackground_tempDisp',$('#editBackground_fColor').val(),$('#editBackground_tColor').val(),0,1,1);setFromToHover=0;setFromToColor=0;visibilityColorSphere(1,0);tmpName=tempWindow('Select \'From\' color from the Color Sphere.',[-1,-1],'',10,.5,0,0);"></div></td><td>
+				</td><td><input type="button" class="dialog-button" value="Pick From Color" style="cursor:pointer;" onClick="$('#editBackground_method').val(1);gradientRunner('editBackground_tempDisp',$('#editBackground_fColor').val(),$('#editBackground_tColor').val(),0,1,1);setFromToHover=0;setFromToColor=0;visibilityColorSphere(1,0);tmpName=tempWindow('Select \'From\' color from the Color Sphere.',[-1,-1],'',10,.5,0,0);"></div></td><td>
 				</td><td><canvas id="editBackground_fColor_display" height="30px" width="50px"></canvas></td><td align='right'>
 				<input type="text" id='editBackground_fColor' size="7" style="text-align:center;margin-top:10px;user-selection:none;-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;-o-user-select:none;" readonly>
 			</td></tr>
 			<tr valign="middle"><td><span style='font-size:120%;'>To Color : </span></td><td>
-				</td><td><input type="button" value="Pick To Color" style="cursor:pointer;" onClick="$('#editBackground_method').val(1);gradientRunner('editBackground_tempDisp',$('#editBackground_fColor').val(),$('#editBackground_tColor').val(),0,1,1);setFromToHover=0;setFromToColor=1;visibilityColorSphere(1,0);tmpName=tempWindow('Select \'To\' color from the Color Sphere.',[-1,-1],'',10,.5,0,0);"></div></td><td>
+				</td><td><input type="button" class="dialog-button" value="Pick To Color" style="cursor:pointer;" onClick="$('#editBackground_method').val(1);gradientRunner('editBackground_tempDisp',$('#editBackground_fColor').val(),$('#editBackground_tColor').val(),0,1,1);setFromToHover=0;setFromToColor=1;visibilityColorSphere(1,0);tmpName=tempWindow('Select \'To\' color from the Color Sphere.',[-1,-1],'',10,.5,0,0);"></div></td><td>
 				</td><td><canvas id="editBackground_tColor_display" height="30px" width="50px"></canvas></td><td align='right'>
 				<input type="text" id='editBackground_tColor' size="7" style="text-align:center;margin-top:10px;user-selection:none;-moz-user-select: none;-webkit-user-select: none;-ms-user-select: none;-o-user-select:none;" readonly>
 			</td></tr>
@@ -1456,10 +1490,10 @@ if('serviceWorker' in navigator){
 			<div id='editBackground_sampleMarker' style='z-index:-2999;position:fixed;top:0px;left:0px;height:200px;width:400px;overflow:hidden;' onmouseup="$('#editBackground_method').val(1);setMarker=0;">&nbsp;</div>
 			
 			<div align="center"><div style="margin-top:5px;margin-bottom:5px;height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
-			<div align='center' style="padding:10px;"><input type="button" style="cursor:pointer;font-size:110%;" value="Duplicate Background as a New Layer" onClick="layerDuplicate('gradientBG');onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ updateTiles(); }"></div>
+			<div align='center' style="padding:10px;"><input type="button" class="dialog-button" style="cursor:pointer;font-size:110%;" value="Duplicate Background as a New Layer" onClick="layerDuplicate('gradientBG');onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ updateTiles(); }"></div>
 			<div align="center"><div style="margin-top:5px;margin-bottom:5px;height:1px;width:400px;background-color:#226666;overflow:hidden;">&nbsp;</div></div>
-			<div align='center' style="padding:10px;"><input type="button" style="cursor:pointer;font-size:110%;" class='acceptButtonDia' value="Update Background" onClick="if(parseInt($('#editBackground_method').val())==0){importImage('eiDia_imgOpen','gradientBG',1, document.querySelector('input[name=\'importImage_screenRes\']:checked').value);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }}else{gradFromHex=$('#editBackground_fColor').val();gradToHex=$('#editBackground_tColor').val();var tmpName=tempWindow('..Generating Background..',[-1,-1],'',2,0,0,0);setTimeout(function(){markerVis(0);setFromToColor=-1;var tmpSW=sW;var tmpSH=sH;setLayerRes(1, [Math.floor(sW*parseFloat($('#editBackground_patternQuality_val').val())),Math.floor(sH*parseFloat($('#editBackground_patternQuality_val').val()))], 1,0);gradientInit(parseInt($('#editBackground_pattern').val()),parseInt($('#editBackground_boot').val()));setLayerRes(1, [tmpSW,tmpSH], 1,0);updateLayerCanvas('lwin_bgLayer');onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }},50);}"> - <input type="button" value="Cancel" style="cursor:pointer;font-size:110%;" onClick="markerVis(0);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div>
-			<?php /* <div align='center' style="padding:10px;"><input type="button" style="cursor:pointer;" class='acceptButtonDia' value="Update Background" onClick="if(parseInt($('#editBackground_method').val())==0){importImage('gradientBG',1, document.querySelector('input[name=\'importImage_screenRes\']:checked').value);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');}else{gradFromHex=$('#editBackground_fColor').val();gradToHex=$('#editBackground_tColor').val();var tmpName=tempWindow('..Generating Background..',[-1,-1],'',2,0,0,0);setTimeout(function(){markerVis(0);setFromToColor=-1;setLayerRes(1, [Math.floor(origSW*parseFloat($('#editBackground_patternQuality_val').val())),Math.floor(origSH*parseFloat($('#editBackground_patternQuality_val').val()))], 1,0);gradientRunner('gradientBG',parseInt($('#editBackground_pattern').val()),gradFromHex,gradToHex,0,parseFloat($('#editBackground_patternQuality_val').val()),parseInt($('#editBackground_boot').val()));setLayerRes(1, [origSW,origSH], 1,0);updateLayerCanvas('lwin_bgLayer');onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');},50);}"> - <input type="button" value="Cancel" style="cursor:pointer;" onClick="markerVis(0);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div> */ ?>
+			<div align='center' style="padding:10px;"><input type="button" class="dialog-button" style="cursor:pointer;font-size:110%;" class='acceptButtonDia' value="Update Background" onClick="if(parseInt($('#editBackground_method').val())==0){importImage('eiDia_imgOpen','gradientBG',1, document.querySelector('input[name=\'importImage_screenRes\']:checked').value);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }}else{gradFromHex=$('#editBackground_fColor').val();gradToHex=$('#editBackground_tColor').val();var tmpName=tempWindow('..Generating Background..',[-1,-1],'',2,0,0,0);setTimeout(function(){markerVis(0);setFromToColor=-1;var tmpSW=sW;var tmpSH=sH;setLayerRes(1, [Math.floor(sW*parseFloat($('#editBackground_patternQuality_val').val())),Math.floor(sH*parseFloat($('#editBackground_patternQuality_val').val()))], 1,0);gradientInit(parseInt($('#editBackground_pattern').val()),parseInt($('#editBackground_boot').val()));setLayerRes(1, [tmpSW,tmpSH], 1,0);updateLayerCanvas('lwin_bgLayer');onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');if(tileUpdate==1){ setTimeout(function(){updateTiles();},50); }},50);}"> - <input type="button" class="dialog-button" value="Cancel" style="cursor:pointer;font-size:110%;" onClick="markerVis(0);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div>
+			<?php /* <div align='center' style="padding:10px;"><input type="button" class="dialog-button" style="cursor:pointer;" class='acceptButtonDia' value="Update Background" onClick="if(parseInt($('#editBackground_method').val())==0){importImage('gradientBG',1, document.querySelector('input[name=\'importImage_screenRes\']:checked').value);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');}else{gradFromHex=$('#editBackground_fColor').val();gradToHex=$('#editBackground_tColor').val();var tmpName=tempWindow('..Generating Background..',[-1,-1],'',2,0,0,0);setTimeout(function(){markerVis(0);setFromToColor=-1;setLayerRes(1, [Math.floor(origSW*parseFloat($('#editBackground_patternQuality_val').val())),Math.floor(origSH*parseFloat($('#editBackground_patternQuality_val').val()))], 1,0);gradientRunner('gradientBG',parseInt($('#editBackground_pattern').val()),gradFromHex,gradToHex,0,parseFloat($('#editBackground_patternQuality_val').val()),parseInt($('#editBackground_boot').val()));setLayerRes(1, [origSW,origSH], 1,0);updateLayerCanvas('lwin_bgLayer');onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');},50);}"> - <input type="button" class="dialog-button" value="Cancel" style="cursor:pointer;" onClick="markerVis(0);onDia=0;dialogueOption(0, '<?php echo $curDiaName; ?>');"></div> */ ?>
 			<br>
 			</div>
 			</div>
@@ -1659,12 +1693,14 @@ if('serviceWorker' in navigator){
 						<div class="button" tgl='0' grp='-1' onClick="toggleSlideMenu(1);">Toggle Mobile Menu</div>
 	<?php } ?>
 						<div class="button" tgl='0' grp='-3' >&nbsp;</div>
-						<div class="button" tgl='0' grp='-1' onClick="$('#barMenu_donateForm').submit();" style="height:24px;overflow:hidden;"><form id="barMenu_donateForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_blank">
-							<input type="hidden" name="cmd" value="_s-xclick">
-							<input type="hidden" name="encrypted" value="-----BEGIN PKCS7-----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-----END PKCS7-----">
-							<input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-							<img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-							</form>
+						<div class="button" tgl='0' grp='-1' onClick="$('#barMenu_donateForm').submit();" style="height:24px;overflow:hidden;">
+							<div style="height:25px;"><form id="barMenu_donateForm" action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+							<input type="hidden" name="cmd" value="_donations" />
+							<input type="hidden" name="business" value="pxl@pxlmancer.com" />
+							<input type="hidden" name="item_name" value="Help fund the creation of Pxlmancer!" />
+							<input type="hidden" name="currency_code" value="USD" />
+							<input type="image" src="images/btn_donate_SM.gif" width="74" height="21" style="position:relative;top:1;" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+							</form></div>
 						</div>
 						<div class="button" tgl='0' grp='-3' >&nbsp;</div>
 						<div class="button" tgl='0' grp='-1' onClick="dialogueOption(1, 'contactMe');">Contact Me</div>
@@ -1683,7 +1719,7 @@ if('serviceWorker' in navigator){
 <?php if($mobile==1){ ?>
 	<!-- Import image for Mobile -->
 	<div id='mobileImageImport' style="overflow:hidden;height:0px;width:0px;visibility:hidden;">
-		<form><input type="file" accept="images/*" id="mobile_imgOpen" size="60" style="margin-top:10px;" onChange="importImage('mobile_imgOpen','gradientBG',1, 'stretch');onDia=0;dialogueOption(0, 'mobileMenu');"></form>
+		<form><input type="file" class="dialog-button" accept="images/*" id="mobile_imgOpen" size="60" style="margin-top:10px;" onChange="importImage('mobile_imgOpen','gradientBG',1, 'stretch');onDia=0;dialogueOption(0, 'mobileMenu');"></form>
 	</div>
 <?php } ?>
 	

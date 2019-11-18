@@ -464,3 +464,34 @@ h2 {
 	opacity:1;
 	filter:alpha(opacity=100);
 }
+.contact-button{
+	width:100px;
+	height:40px;
+}
+.dialog-button{
+	font-size:110%;
+	color:#dbefff;
+	border: 2px #909a9a solid;
+	border-left:0px;
+	border-right:0px;
+	border-radius:10px;
+	background-color:#607975;
+}
+.dialog-button:hover{
+	color:#dbefff;
+	border: 2px #a0aaaa solid;
+	border-left:0px;
+	border-right:0px;
+	border-radius:10px;
+	background-color:#90a9a5;
+	cursor:pointer;
+}
+.dialog-button:active{
+	color:#c6cfca;
+	border: 2px #606a6a solid;
+	border-left:1px;
+	border-right:1px;
+	border-radius:10px;
+	background-color:#384542;
+	cursor:pointer;
+}

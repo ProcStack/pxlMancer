@@ -30,8 +30,9 @@ function mapUpdateCamera(){
 	//if(mapCamMode == 0){
 	var camOffsetPos=randomSmooth(19,runner*.02,1);
 	mapCamX=camOffsetPos.x*.1 - Math.cos((mapCamX/sW)*pi+pi  +panOff)*zoomMult*.15;
-	mapCamY=camOffsetPos.y;// + 50 + 15*(mouseY/sH);
-	mapCamZ=camOffsetPos.z + Math.cos((mapCamZ/sW-.5)*pi +panOff)*5*zoomMult +60 - 4*yPerc;
+	mapCamY=camOffsetPos.y+10;// + 50 + 15*(mouseY/sH);
+	//mapCamZ=camOffsetPos.z + Math.cos((mapCamZ/sW-.5)*pi +panOff)*5*zoomMult +60;
+	mapCamZ=camOffsetPos.z +40;
 
 	if(mapCamPrevX==undefined){
 		mapCamPrevX=mapCamX;
@@ -44,11 +45,14 @@ function mapUpdateCamera(){
 	mapCamZ=mapCamPrevZ*(1-camPosBlend) + mapCamZ*camPosBlend;
 	
 	//---------------
+	//if(imbixTimer==1){
+	//	camLookAt=[...mapCamPrevLookAt];
+	//}
 	
 	camOffsetLookPos=randomSmooth(21,runner*.02,1);
 	
 	yPercLook=Math.min(1, Math.max(0, (yPerc-.15)*1.6+.3));
-	camLookAt=[0, camOffsetLookPos.y*0.0, camOffsetLookPos.z*.2-150-1*yPercLook];
+	camLookAt=[0, camOffsetLookPos.y-5, camOffsetLookPos.z*.2-1*yPercLook];
 	//camLookAt=[0, 20, -50];
 	
 	camLookAt[0]=mapCamPrevLookAt[0]*(1-camPosBlend) + camLookAt[0]*camPosBlend;

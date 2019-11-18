@@ -22,7 +22,7 @@ function imbixBotMove(gen=[mouseX,mouseY,0]) {
 			yAnim=noiseY;
 		}
 		outX=-(xAnim)*.01;
-		outY=(yAnim)*.003-14.7;
+		outY=(yAnim)*.003-10;
 		var outZ=(1-xAnim)*.0015;
 		
 		//geoList['imby'][0].position.x=outX;//-25.6;
@@ -61,11 +61,16 @@ function maximizeImbix(){
 	document.getElementById("activatedImbix").style.visibility="visible";
 	document.getElementById("activatedImbix").style.height="100%";
 	document.getElementById("activatedImbix").style.width="100%";
-	imbix.style.zIndex="940";
+	imbix.style.zIndex="300";
 	geoList['imby'][0].visible=true;
 	geoList['imbyGlowMask'][0].visible=true;
 	document.getElementById("glDraw").style.visibility="visible";
+	document.getElementById("glDraw").style.left="50%";
+	document.getElementById("glDraw").style.transform="translate(-50%, -100%)";
+	document.getElementById("glDraw").style.top="85%";
+	
 	document.getElementById("lwin_l1_draw").style.top=-sH*.12;
+	
 	
 	imbyScreenDraw([-1,-1,-1,1,-1,-1],[0,70],0);
 	if(mapPause==0){
@@ -90,6 +95,7 @@ function minimizeImbix(){
 	geoList['imbyGlowMask'][0].visible=false;
 	document.getElementById("lwin_l1_draw").style.top=0;
 	//reinitializeSettings(0);
+	resizeRenderResolution();
 
 	toCenter=1;
 	mirror=3;

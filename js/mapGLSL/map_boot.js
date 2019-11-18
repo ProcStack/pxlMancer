@@ -123,18 +123,24 @@ function mapOnExitMode(){
 	}
 }
 */
-function resizeRenderResolution(){
-	mapW=(sW=window.innerWidth)*mapResPerc;
-	mapH=(sH=window.innerHeight)*mapResPerc;
-	console.log("Xx "+mapW+" - "+mapH);
-	mapCanvas.width=mapW;
-	mapCanvas.height=mapH;
-	mapEngine.setPixelRatio(window.devicePixelRatio*mapResPerc);
+function resizeRenderResolution(runCanvasResize=1){
+	var pixelRatio;
+	if(runCanvasResize==1){
+		mapW=(sW=window.innerWidth)*mapResPerc;
+		mapH=(sH=window.innerHeight)*mapResPerc;
+		mapCanvas.width=mapW*mapResPerc;
+		mapCanvas.height=mapH*mapResPerc;
+		pixelRatio=window.devicePixelRatio*mapResPerc;
+	}else{
+		pixelRatio=mapW/mapH;
+	}
+	mapEngine.setPixelRatio( pixelRatio );
 	mapEngine.setSize(mapW/mapResPerc, mapH/mapResPerc);
 	var aspectRatio=mapW/mapH;
 	mapCam.aspect=aspectRatio;
 	mapCam.updateProjectionMatrix();
 	mapEngine.render(mapScene,mapCam);
+	
 }
 /*
 document.onkeyup=function(e){keyUpCall(e);};
@@ -480,13 +486,15 @@ function mapBootEngine(){
 		console.log("-- Depth Composer pass currently not used, --");
 		console.log("  -- A future technology for Metal Asylum --");
 	}
-	var aspectRatio=mapCanvas.width/mapCanvas.height;
+	//var aspectRatio=mapCanvas.width/mapCanvas.height;
+	var aspectRatio=mapW/mapH;
 	mapEngine.setClearColor(0x000000, 0);
-	mapEngine.setPixelRatio(window.devicePixelRatio);
-	//mapEngine.setPixelRatio(aspectRatio);
+	//mapEngine.setPixelRatio(window.devicePixelRatio);
+	mapEngine.setPixelRatio(aspectRatio);
 	//mapEngine.setSize(mapW*mapResPerc, mapH*mapResPerc);
 	mapEngine.setSize(mapW, mapH);
 	//mapEngine.gammaOutput=true;
+	mapEngine.context.getShaderInfoLog=function(){return "";};
 	
 	texLoader=new THREE.ImageLoader();
 	
@@ -501,7 +509,7 @@ function mapBootEngine(){
 	}
 	
 	//aspectRatio=sW/sH;
-	mapCam=new THREE.PerspectiveCamera(35,aspectRatio, 1, 500);
+	mapCam=new THREE.PerspectiveCamera(45,aspectRatio, 1, 500);
 	mapCam.position.x=0;
 	mapCam.position.y=10;
 	mapCam.position.z=30;
@@ -515,7 +523,7 @@ function mapBootEngine(){
 	
 	var textureList;
 	var transformList;
-	let imbyPlaneScale=.0175;
+	let imbyPlaneScale=.13;
 	
 	var imbyObj=new THREE.PlaneGeometry(1024*imbyPlaneScale,256*imbyPlaneScale,10,10);
 	var imbyMat;
@@ -715,7 +723,6 @@ function mapBootEngine(){
 	var yRes=mapH*mapResPerc;
 	//xRes=mapEngine.context.drawingBufferWidth;
 	//yRes=mapEngine.context.drawingBufferHeight;
-	console.log(xRes+" --- "+yRes);//
 	var xRatio=1/xRes;
 	var yRatio=1/yRes;
 	var res=sW/sH;

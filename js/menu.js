@@ -95,14 +95,8 @@ function gradientInit(patternGen,boot){
 	gBG.setAttribute("width", sW);
 	gBG.setAttribute("height", sH);
 	
-	var pre=new Date().getTime();
 	gradientRunner("gradientBG",patternGen,gradFromHex,gradToHex,((mobile+1)%2),1,boot);
-	var post=new Date().getTime();
-	var delta=post-pre;
-	machineBenchmark=Math.max(0, delta-500);
-	machineBenchmark=1-(machineBenchmark*.0005);
-	console.log("Benchmark Time -- "+delta);
-	console.log("Machine Base Quality -- "+machineBenchmark);
+	
 }
 function tempBgInit(){
 	gBG=document.getElementById("tempBG");

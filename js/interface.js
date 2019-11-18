@@ -786,7 +786,7 @@ function downloadDocument(dl,code){
 	var download = new Blob([code], {type: 'txt'});
 	hf.href = URL.createObjectURL(download);
 	hf.download = dlName;
-	hf.innerHTML = "<input type='button' value='Click to download file'>";
+	hf.innerHTML = "<input type='button' class='dialog-button' value='Download file'>";
 	hf.id=uniqueId+"_dlButton";
 	//var dlCount=$("#ddDia_downloadLink").find('.dlLink');
 	$("#dlDia_genListCount").val(dlCount)
@@ -796,12 +796,12 @@ function downloadDocument(dl,code){
 	if($("#ddDia_downloadLink").html()!=''){
 		prev="<div style='opacity:.5;margin-top:5px;margin-bottom:5px;height:1px;width:400px;background-color:#226666;overflow:hidden;'>&nbsp;</div><div align='center' style='font-size:80%;'>--Previous Downloads--</div>";
 	}
-	$("#ddDia_downloadLink").prepend("<div id='"+uniqueId+"'></div>");
+	$("#ddDia_downloadLink").prepend("<div id='"+uniqueId+"' style='margin:2px;'></div>");
 	$("#"+uniqueId).html("<span class='dlLink'>"+dlCount+" - ");
 	$("#"+uniqueId).append("<span style='font-size:80%;'> "+dSplit[1]+" "+dSplit[2]+","+dSplit[3]+" at "+time+"</span> - ");
 	$("#"+uniqueId).append(hf);
-	$("#"+uniqueId).append(" -- <input type='button' value='Load Entry' onClick=\"loadDocument('"+hf.href+"');\">");
-	$("#"+uniqueId).append(" -- <input type='button' value='Delete Entry' onClick=\"$('#"+uniqueId+"').remove();\"></span><br>");
+	$("#"+uniqueId).append(" -- <input type='button' class='dialog-button' value='Load' onClick=\"loadDocument('"+hf.href+"');\">");
+	$("#"+uniqueId).append(" -- <input type='button' class='dialog-button' value='Delete' onClick=\"$('#"+uniqueId+"').remove();\"></span><br>");
 	$("#dlListBreaker").remove();
 	$("#"+uniqueId).append("<div id='dlListBreaker' align='center'>"+prev+"</div>");
 }

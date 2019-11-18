@@ -61,7 +61,8 @@ function buildDialogues(){
 		if($(div).attr("id")=="mobileMenu"){
 			$(div).css({"height":(sH+sH*.1)+"px","width":(sW+sW*.1)+"px","left":(-sW*.05)+"px"});
 		}else{
-			$(div).css({"height":sH+"px","width":sW+"px"});
+			//$(div).css({"height":sH+"px","width":sW+"px"});
+			//$(div).css({"height":"100px","width":"100px"});
 		}
 	}
 	mainDialogues=$(dialogueParent).find(".dialogueTable");
@@ -70,7 +71,8 @@ function buildDialogues(){
 		if($(div).parent().attr("id")=="mobileMenu"){
 			$(div).css({"height":sH+"px","width":(sW+sW*.1)+"px","left":(-sW*.05)+"px"});
 		}else{
-			$(div).css({"height":sH+"px","width":sW+"px"});
+			//$(div).css({"height":sH+"px","width":sW+"px"});
+			//$(div).css({"height":"100%","width":"100%"});
 		}
 	}
 	
@@ -133,6 +135,7 @@ function buildDialogues(){
 		for(i=0;i<bodies.length;i++){
 			bodySec=bodies[i];
 			divHeight=$(bodySec).height();
+			//divHeight=$($(bodySec).children()[0]).height();
 			divWidth=$(bodySec).parent().width()+addWidth;
 			$(bodySec).width(divWidth);
 			$(bodySec).height(divHeight);

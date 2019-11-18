@@ -1,4 +1,4 @@
-var whiteList=['pxlV8'];
+var whiteList=['pxl-1.5.5'];
 this.addEventListener('install', function(e){
 	e.waitUntil(
 		caches.open(whiteList[0]).then(function(cache){
@@ -61,7 +61,7 @@ this.addEventListener('fetch', function(e){
 		);
 		return;
 	}*/
-	e.respondWith(
+	/*e.respondWith(
 		caches.match(e.request).then(function(resp){
 			return resp || fetch(e.request).then(function(responce){
 				return caches.open(whiteList[0]).then(function(cache){
@@ -69,6 +69,11 @@ this.addEventListener('fetch', function(e){
 					return responce;
 				});
 			});
+		})
+	);*/
+	e.respondWith(
+		caches.match(e.request).then(function(responce){
+			return responce || fetch(e.request);
 		})
 	);
 });

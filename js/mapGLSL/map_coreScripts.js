@@ -269,12 +269,12 @@ function stepClock(){
 	var tempCur=clockCur;
 	clockCur=Date.now()*.001;
 	clockDelta=clockCur-clockPrev;
+	clockDeltaTime=clockDelta/0.01666666666; // 1/60
 	clockStartDelta=clockCur-clockStart;
 	clockPrev=clockCur;
 }
 
 function mapRender(){
-	var curMS=Date.now();
 	renderRunner++;
 	
 	stepClock();
@@ -296,9 +296,9 @@ function mapRender(){
 	let offset=(mouseX/sW*.4+.3);
 	mainMenuShaderPass.uniforms.uOffset.value=offset;
 	mainMenuShaderPass.uniforms.flicker.value=offsetNoise;
-	mainMenuShaderPass.uniforms.time.value=renderRunner;
+	mainMenuShaderPass.uniforms.time.value=clockStartDelta;
 	
-	mapEngine.render(mapScene,mapCam);
+	//mapEngine.render(mapScene,mapCam);
 	mapEngine.render(mapImbyGlowScene,mapCam,mapImbyGlowBuffer);
 	
 	map_glComposer.render();
@@ -310,10 +310,12 @@ function mapRender(){
 	imbyBlurShaderPass.uniforms.tDiffuse.value=mapImbyGlowPassBuffer.texture;
 			
 	objsBooted=1;
+	//console.log(clockDelta+" ms -- "+clockDeltaTime);
+	var baseTimeout=35+clockDeltaTime*4;
 	
 	if(mapPause == 0){
 		setTimeout(function(){
 			requestAnimationFrame(mapRender);
-		},35);
+		},baseTimeout);
 	}
 }

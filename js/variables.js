@@ -38,6 +38,7 @@ var clockPrev=0;
 var clockCur=0;
 var clockStartDelta=0;
 var clockDelta=0;
+var clockDeltaTime=0;
 var drawGrid=0;
 
 
