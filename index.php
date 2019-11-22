@@ -378,13 +378,13 @@ window.isUpdateAvailable=new Promise(function(resolve, reject){
 				const installingWorker=reg.installing;
 				installingWorker.onstatechange=function(){
 					if(installingWorker.state=="installed"){
+						console.log("Pxlmancer's Service Worker is already installed\n"+
+							"You can launch https://pxlmancer.com like an app offline with this!");
 						if(navigator.serviceWorker.controller){
 							resolve(true);
 						}else{
 							resolve(false);
 						}
-						console.log("Pxlmancer's Service Worker is already installed\n"+
-							"You can launch https://pxlmancer.com like an app offline with this!");
 					}else{
 						console.log("Ahoi!  Soooo, this Javascript Worker is going to load now...\n"+
 							"It this newer tech Google created to help people create cool sites to branch out more!"+
@@ -601,9 +601,9 @@ window.isUpdateAvailable=new Promise(function(resolve, reject){
 		vec4 noiseCd=texture2D(tGlowNoise, vec2(vUv.x+sin(timer*.5+vUv.x*5.)*.2, mod(vUv.y*.3-timer + sin((vUv.x-.5)*6.0*(passCd.r)),.998)+.001 ));
 		float glowMult=texture2D(tGlowMask, vUv).r;
 		
-		float yMult=( (noiseCd.r-.5)-(noiseCd.g-.5)+(noiseCd.b-.5) )*.06;
+		float yMult=( (noiseCd.r-.5)-(noiseCd.g-.5)+(noiseCd.b-.5) )*.1;
 		float mouseOffset=( max(0.0, 1.0-abs(vUv.x-uOffset)*4.0) );
-		yMult=min(1.0, max(0.0, time*(1.0+yMult)-(vUv.y*4.0)));
+		yMult=min(1.0, max(0.0, time*(.30+yMult)-(vUv.y*4.0*( max(0.0, 8.0-time)*.125) )));
 		yMult+=mouseOffset*yMult;
 		
 		float curAlpha=Cd.a*max(glowMult,passCd.a);

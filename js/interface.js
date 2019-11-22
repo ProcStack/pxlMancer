@@ -58,7 +58,6 @@ function setActive(){
 	}else{
 		toggleSlideMenu(1);
 	}
-	$("#layersWindow").css({'visibility':'visible','zIndex':5000});
 	
 	var canvas=document.getElementById("undoDraw");
 	canvas.setAttribute("width", sW);
@@ -93,23 +92,28 @@ function setActive(){
 	document.getElementById('geoDrawGuides').onmousedown = function(e) {checkMouse(e,1);};
 	document.getElementById('geoDrawGuides').onmouseup = function(e) {if(onDia==0){checkMouse(e,0);}else{onDia=0;storeKeyHold=0;}};
 	
-	if(mobile==0){
-		$("#colorSphere").css({'visibility':'visible','zIndex':10040});
-	}
-	
-	if(genMimic==1){
-		howTo_genCursor(0);
-		var size=$('#howToBuild').width();
-		$('#howToBuild').css({'pointer-events':'none','left':(mouseX-size/2)+'px','top':(mouseY-size/2)+'px', 'zIndex':90005,'opacity':1,'filter':'alpha(opacity=100)'});
-		$('#curDraw').css('cursor','none');
-		$('#mouseDraw').css('cursor','none');
-	}
-	
 	selectTool=0;
 	selectToolDeselect=0;
 	
-	//What are you here to do?
-	activatePrompt(-1);
+	if(mobile==0){
+		$("#layersWindow").css({'visibility':'visible','zIndex':5000});
+		$("#colorSphere").css({'visibility':'visible','zIndex':10040});
+	
+		if(genMimic==1){
+			howTo_genCursor(0);
+			var size=$('#howToBuild').width();
+			$('#howToBuild').css({'pointer-events':'none','left':(mouseX-size/2)+'px','top':(mouseY-size/2)+'px', 'zIndex':90005,'opacity':1,'filter':'alpha(opacity=100)'});
+			$('#curDraw').css('cursor','none');
+			$('#mouseDraw').css('cursor','none');
+		}
+		
+		
+		//What are you here to do?
+		activatePrompt(-1);
+	}else{
+		toggleSlideMenu(1);
+		//dialogueOption(1, 'mobileMenu');
+	}
 }
 function getMouseXY(e) {
 	//if(dispStats==1){
@@ -162,7 +166,7 @@ function getMouseXY(e) {
 		if (mouseX < 0){mouseX = 0}
 		if (mouseY < 0){mouseY = 0} 
 		if(layerBlink==0){
-			if(dragClick == 1){
+			if(dragClick == 1 || (dragging==1)){
 				if(sampleColor==0){
 					if($("#"+curLayer).attr('vis') == '0'){
 						var layerText=$("#"+curLayer).find('.layerName').text();

@@ -1,5 +1,7 @@
 function startTouch(e,clicker) {
-	if(touchCheck==0 && dragTotal==0){
+	var touchList=e.touches;
+	
+	if(touchCheck==0 && (dragTotal==0 || mapPause==0)){
 		var canvas=document.getElementById("undoDraw");
 		canvas.setAttribute("width", sW);
 		canvas.setAttribute("height", sH);
@@ -17,12 +19,14 @@ function startTouch(e,clicker) {
 				$(parentClass).css({top:0});
 				$('.optionButton').css({"font-size":"140%"});
 			}
+			if(touchList.length > 0){
+				mobile=1;
+				touchCheck=1;
+				toggleSlideMenu(0);
+				setActive();
+			}
 		}
 		active=1;
-	}
-	if(dragTotal==0 && mobile==1){
-		touchCheck=1;
-		toggleSlideMenu(0);
 	}
 	dragCount=0;
 	dragging=1;
@@ -31,8 +35,8 @@ function startTouch(e,clicker) {
 		$("#dragClick").html(dragging);
 	}
 	touchChecker=4;
-	e.preventDefault();
-	var touchList=e.touches;
+	if(mobile==0){ e.preventDefault(); }
+
 	var touch = touchList[0];
 	mouseX = touch.pageX;
 	mouseY = touch.pageY;
@@ -55,10 +59,9 @@ function startTouch(e,clicker) {
 	}else{
 		touchCheckMenuClose=0;
 	}
-	if(mouseX>slideWidth && mouseY>slideHeight && touchCheck==1 && dialogueOpen==0){
+	/*if(mouseX>slideWidth && mouseY>slideHeight && touchCheck==1 && dialogueOpen==0){
 		dialogueOption(1, 'mobileMenu');
-	}
-	
+	}*/
 	
 	
 	dragPos=[touch.pageX,touch.pageY, touch.pageX,touch.pageY, touch.pageX,touch.pageY];
@@ -67,10 +70,10 @@ function startTouch(e,clicker) {
 		$("#dragCount").html(dragCount);
 	}
 
-	document.getElementById("imbixBot").style.visibility="hidden";
+	try{ document.getElementById("imbixBot").style.visibility="hidden";
 	document.getElementById("activatedImbix").style.visibility="hidden";
 	//document.getElementById("drawOptions").style.visibility="visible";
-	document.getElementById("mouseDraw").style.visibility="hidden";
+	document.getElementById("mouseDraw").style.visibility="hidden"; }catch(err){}
 	if(clearDrawing==1){
 		clearScreen(curCanvas);
 		clearScreen("curDraw");
@@ -93,7 +96,7 @@ function doDragTouch(e){
 	if(touch.length==2 && dragCount==0){
 		touchUndo=1;
 	}
-	preventDefault;
+	if(mobile==0){ e.preventDefault(); }
 	dragTouch(e);
 }
 function dragTouch(e){
@@ -138,7 +141,7 @@ function scrollMenu(e){
 	}
 }
 function endTouch(e) {
-	e.preventDefault();
+	if(mobile==0){ e.preventDefault(); }
 	var evaler='';
 	var hit=0;
 	//if((mouseX<leftPad || mouseX>(leftPad+diaWidth))){// && touchCheckMenuClose==1 && lockMenuScroll==0){

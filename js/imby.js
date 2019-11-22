@@ -104,7 +104,6 @@ function minimizeImbix(){
 	$('#cs_red_val').val(-3);
 	$('#cs_green_val').val(-3);
 	$('#cs_blue_val').val(-3);
-	$('#cs_red_val').val( 0 );
 	mapPause=1;
 }
 

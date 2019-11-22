@@ -122,9 +122,10 @@ function runInitScripts(){ // Run initializing scripts
 			setTimeout(function(){	
 				
 				mapCanvas=document.getElementById("glDraw");
-				mapW=Math.max(sW*.5, 650);//window.innerWidth*mapResPerc;
+				
+				mapW=Math.max(sW*.6, 500+150*(sW/1000));//window.innerWidth*mapResPerc;
 				mapCanvas.width=mapW;//window.innerWidth;
-				mapH=sH*.20;//window.innerHeight*mapResPerc;
+				mapH=140;//window.innerHeight*mapResPerc;
 				mapCanvas.height=mapH;//window.innerHeight;
 				mapBootEngine();
 
@@ -991,10 +992,15 @@ function imbyScreenDraw(run,rand,messPosPrompt){
 }
 
 
-function prepQualitySettings(){
+function prepQualitySettings(loop=0){
 
 	// sl_qualityPercent
-	document.getElementById('sl_qualityPercent_val').value=machineBenchmark;
+	if(mobile==0){
+		if(verbose){
+				console.log("Quality Percentage set to - "+machineBenchmark);
+		}
+		document.getElementById('sl_qualityPercent_val').value=machineBenchmark;
+	}
 	//document.getElementById('sl_qualityPercent_val').parentNode.submit();
 }
 
