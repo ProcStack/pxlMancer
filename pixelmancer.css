@@ -495,3 +495,14 @@ h2 {
 	background-color:#384542;
 	cursor:pointer;
 }
+.burgerBar{
+	height:3px;
+	width:70%;
+	border: 2px #659a90 solid;
+	border-left:0px;
+	border-right:0px;
+	border-radius:4px;
+	background-color:#6f9f94;
+	margin-bottom:3px;
+	
+}

@@ -61,10 +61,10 @@ if(isset($_GET['m'])){
 $barSlide="bar";
 if($mobile==1){
 	$barSlide="slide";
-	$burgerSize="height:100px;width:130px;";
-	$burgerPattySize=100;
-	$burgerPattyBtm=5;
-	$burgerPattyBtmParent=18;
+	$burgerSize="height:40px;width:60px;";
+	$burgerPattySize=50;
+	$burgerPattyBtm=3;
+	$burgerPattyBtmParent=-1;
 }else{
 	$burgerSize="height:50px;width:120px;";
 	$burgerPattySize=60;
@@ -131,18 +131,18 @@ if(count($_POST)>0){
 <html lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0"></meta>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"></meta>
 <meta name="msapplication-navbutton-color" content="#102030">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="#102030">
 <title>Pixelmancer :: Graphic Editor</title>
 <meta name="description" content="Free online graphic editor for the dedicated or to fill boredom.  Make something cool or toy around, its up to you!">
-<meta name="keywords" content="draw,art,graphic,design,fun,web,app,free">
+<meta name="keywords" content="draw,art,graphic,design,draw,create,fun,web,app,free">
 <meta name="author" content="Kevin Edzenga">
 <meta name="revisit-after" content="5 days">
 <meta name="ROBOTS" content="INDEX, NOFOLLOW">
-<!-- https://realfavicongenerator.net/ -->
+
 <link rel="apple-touch-icon" sizes="180x180" href="https://pxlmancer.com/icon/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="https://pxlmancer.com/icon/favicon-32x32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="https://pxlmancer.com/icon/android-chrome-192x192.png" sizes="192x192">
@@ -1514,9 +1514,9 @@ window.isUpdateAvailable=new Promise(function(resolve, reject){
 	<tr>
 	<td>
 	<div style="position:relative;bottom:<?php echo $burgerPattyBtmParent?>px;right:1px;">
-	<div class="burgerBar" style="height:1px;width:<?php echo $burgerPattySize; ?>px;position:relative;">&nbsp;</div>
-	<div class="burgerBar" style="height:1px;width:<?php echo $burgerPattySize; ?>px;position:relative;bottom:<?php echo $burgerPattyBtm*1.1; ?>px;">&nbsp;</div>
-	<div class="burgerBar" style="height:1px;width:<?php echo $burgerPattySize; ?>px;position:relative;bottom:<?php echo ($burgerPattyBtm*2.2); ?>px;">&nbsp;</div>
+	<div class="burgerBar">&nbsp;</div>
+	<div class="burgerBar">&nbsp;</div>
+	<div class="burgerBar">&nbsp;</div>
 
 	</div>
 	</td></tr></table>

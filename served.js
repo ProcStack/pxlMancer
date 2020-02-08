@@ -1,4 +1,4 @@
-var whiteList=['pxl-1.5.5'];
+var whiteList=['pxl-1.5.6'];
 this.addEventListener('install', function(e){
 	e.waitUntil(
 		caches.open(whiteList[0]).then(function(cache){

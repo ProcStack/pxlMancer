@@ -996,13 +996,13 @@ function buildControls(){
 	controlText=$("#slideMenu").html();
 	divID=$("#slideMenu").attr('id');
 	html="<canvas style='z-index:0;position:relative;' id='slideMenuCanvas' height='"+divHeight+"' width='"+divWidth+"'></canvas>\n";
-	html=html+"<div align='left' style='position:relative;bottom:"+divHeight+";left:20;z-index:1;' id='slideMenuDiv'>"+controlText+"</div>";
+	html=html+"<div align='left' style='position:relative;bottom:"+divHeight+";left:11;z-index:1;' id='slideMenuDiv'>"+controlText+"</div>";
 	$("#slideMenu").html(html);
 	$("#slideMenu").height(divHeight);
 	$("#slideMenu").width(divWidth);
 	$("#slideMenu").css({'cursor':'pointer'});
 	//bevelShapediv,button,padding,canvas,alpha,bevel,buffer,pad,topLB,topRB,lowLB,lowRB,selected)
-	var pattyPad=15;
+	var pattyPad=10;
 	if(mobile==0){
 		pattyPad=10;
 	}
@@ -1012,13 +1012,13 @@ function buildControls(){
 	$("#slideMenu").attr("onMouseUp","bevelShape(('slideMenuDiv'),0,0,('slideMenuCanvas'),.65,"+pattyPad+",3,1,1,0,0,0,1,0);");
 	$("#slideMenu").attr("onMouseOut", "bevelShape(('slideMenuDiv'),0,0,('slideMenuCanvas'),.65,"+pattyPad+",3,1,1,0,0,0,0,0);");
 	
-	buttons=$("#slideMenu").find(".burgerBar");
+	/*buttons=$("#slideMenu").find(".burgerBar");
 	for(i=0;i<buttons.length;i++){
 		button=buttons[i];
-		divHeight=10;
-		var patBottom=3+i*4;//divHeight*.2;
+		divHeight=5;
+		var patBottom=2+i*4;//divHeight*.2;
 		if(mobile==1){
-			divHeight=$(button).height()+addWidth;
+			//divHeight=$(button).height()+addWidth;
 			patBottom=divHeight;
 		}
 		$(button).parent().height(addWidth);
@@ -1037,7 +1037,7 @@ function buildControls(){
 
 		height=bevelShape(('burger'+i+'Div'),0,-2,('burger'+i+'Canvas'),.65,4,0,0,1,1,1,1,1,0);
 		buttonCount+=1;
-	}
+	}*/
 	
 	// Place hamburger
 	divHeight=$(parentClass).height();

@@ -105,6 +105,7 @@ document.addEventListener(mousewheelevt, function(e) {if(active>=0){displaywheel
 window.onresize=function(event){resetCanvas();}
 function runInitScripts(){ // Run initializing scripts
 	// Fixes resolution issues where the screen size adjusts to application status post script loading but pre onLoad
+
 	sW=window.innerWidth;
 	sH=window.innerHeight;
 	origSW=sW;
@@ -148,7 +149,7 @@ function runInitScripts(){ // Run initializing scripts
 	var post=new Date().getTime();
 	var delta=post-pre;
 	machineBenchmark=Math.max(0, delta-500);
-	machineBenchmark=1-(machineBenchmark*.0005);
+	machineBenchmark=1-(machineBenchmark*.0003);
 	console.log("Benchmark Time -- "+delta);
 	console.log("Machine Base Quality -- "+machineBenchmark);
 	//mapResPerc=machineBenchmark;
