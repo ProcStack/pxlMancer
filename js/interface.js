@@ -166,7 +166,7 @@ function getMouseXY(e) {
 		if (mouseX < 0){mouseX = 0}
 		if (mouseY < 0){mouseY = 0} 
 		if(layerBlink==0){
-			if(dragClick == 1 || (dragging==1)){
+			if(dragClick == 1){// || (dragging==1)){
 				if(sampleColor==0){
 					if($("#"+curLayer).attr('vis') == '0'){
 						var layerText=$("#"+curLayer).find('.layerName').text();
